@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body{margin:0;background:#15181C;-webkit-font-smoothing:antialiased;}
+    ::selection{background:rgba(201,131,79,0.25);color:#fff;}
+    * { box-sizing: border-box; }
+    ::-webkit-scrollbar{width:8px;height:8px;}
+    ::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.12);border-radius:8px;}
+    ::-webkit-scrollbar-track{background:transparent;}
+    input[type="number"]::-webkit-inner-spin-button{opacity:0;}
+    @media print { #nori-app-shell{display:block!important;} #nori-sidebar,#nori-topbar{display:none!important;} }
+  </style>
+</helmet>
+
+<div id="nori-app-shell" style="display:flex;height:100vh;width:100%;background:#15181C;color:#EDEAE4;font-family:'Instrument Sans',system-ui,sans-serif;overflow:hidden;">
+
+  <!-- ============ SIDEBAR ============ -->
+  <div id="nori-sidebar" style="width:236px;flex:none;background:#12151A;border-right:1px solid rgba(255,255,255,0.06);display:flex;flex-direction:column;padding:18px 12px;">
+    <div style="display:flex;align-items:center;gap:10px;padding:6px 8px 22px;">
+      <div style="width:28px;height:28px;border-radius:7px;background:#0E1116;border:1px solid rgba(237,234,228,0.12);display:flex;align-items:center;justify-content:center;flex:none;">
+        <div style="width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:9px solid #EDEAE4;"></div>
+      </div>
+      <div style="display:flex;flex-direction:column;line-height:1.05;">
+        <span style="font-weight:700;font-size:14.5px;letter-spacing:2px;">NORI<span style="font-weight:400;color:#9C978F;"> OS</span></span>
+        <span style="font-size:9px;letter-spacing:1.5px;color:#7A756D;">SISTEMA OPERATIVO</span>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:2px;">
+      <div data-nav="dashboard" style="{{ navStyleDashboard }}" onClick="{{ goDashboard }}">
+        <div style="display:grid;grid-template-columns:5px 5px;grid-template-rows:5px 5px;gap:2px;width:12px;">
+          <span style="background:currentColor;border-radius:1px;"></span><span style="background:currentColor;border-radius:1px;opacity:0.5;"></span>
+          <span style="background:currentColor;border-radius:1px;opacity:0.5;"></span><span style="background:currentColor;border-radius:1px;"></span>
+        </div>
+        <span>Dashboard</span>
+      </div>
+      <div data-nav="formulador" style="{{ navStyleFormulador }}" onClick="{{ goFormulador }}">
+        <div style="position:relative;width:14px;height:14px;">
+          <span style="position:absolute;left:0;top:2px;width:9px;height:9px;border-radius:50%;border:1.6px solid currentColor;"></span>
+          <span style="position:absolute;right:0;top:0;width:9px;height:9px;border-radius:50%;border:1.6px solid currentColor;opacity:0.55;"></span>
+        </div>
+        <span>Formulador</span>
+      </div>
+      <div data-nav="nutrimental" style="{{ navStyleNutrimental }}" onClick="{{ goNutrimental }}">
+        <div style="display:flex;flex-direction:column;gap:2.5px;width:13px;">
+          <span style="height:2px;background:currentColor;border-radius:1px;"></span>
+          <span style="height:2px;background:currentColor;border-radius:1px;width:70%;"></span>
+          <span style="height:2px;background:currentColor;border-radius:1px;width:85%;"></span>
+        </div>
+        <span>Nutrimental</span>
+      </div>
+      <div data-nav="inventario" style="{{ navStyleInventario }}" onClick="{{ goInventario }}">
+        <div style="width:13px;height:13px;border:1.6px solid currentColor;border-radius:3px;position:relative;">
+          <span style="position:absolute;left:1px;right:1px;top:4.5px;height:1.4px;background:currentColor;opacity:0.6;"></span>
+        </div>
+        <span>Inventario</span>
+      </div>
+      <div data-nav="produccion" style="{{ navStyleProduccion }}" onClick="{{ goProduccion }}">
+        <div style="width:13px;height:13px;border-radius:50%;border:1.6px solid currentColor;border-right-color:transparent;transform:rotate(45deg);"></div>
+        <span>Producción</span>
+      </div>
+      <div data-nav="ventas" style="{{ navStyleVentas }}" onClick="{{ goVentas }}">
+        <div style="display:flex;align-items:flex-end;gap:2px;height:13px;">
+          <span style="width:3px;height:5px;background:currentColor;border-radius:1px;opacity:0.55;"></span>
+          <span style="width:3px;height:9px;background:currentColor;border-radius:1px;opacity:0.8;"></span>
+          <span style="width:3px;height:13px;background:currentColor;border-radius:1px;"></span>
+        </div>
+        <span>Ventas</span>
+      </div>
+      <div data-nav="noriai" style="{{ navStyleNoriAI }}" onClick="{{ goNoriAI }}">
+        <div style="width:13px;height:13px;border-radius:50%;background:radial-gradient(circle at 35% 30%, #E8C39B, #C9834F 60%, #5C3A22);"></div>
+        <span>NORI AI</span>
+      </div>
+    </div>
+
+    <div style="margin-top:auto;display:flex;flex-direction:column;gap:8px;">
+      <div style="display:flex;align-items:center;gap:9px;padding:9px 8px;border-radius:9px;background:rgba(255,255,255,0.03);">
+        <div style="width:26px;height:26px;border-radius:50%;background:#39332B;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:#C7C2B8;">MG</div>
+        <div style="display:flex;flex-direction:column;line-height:1.25;">
+          <span style="font-size:12.5px;font-weight:600;">María González</span>
+          <span style="font-size:10.5px;color:#7A756D;">Fundadora</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ MAIN ============ -->
+  <div style="flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden;">
+
+    <!-- TOPBAR -->
+    <div id="nori-topbar" style="height:56px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 28px;border-bottom:1px solid rgba(255,255,255,0.06);">
+      <div style="font-size:14.5px;font-weight:600;">{{ screenTitle }}</div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div onClick="{{ goNoriAI }}" style="cursor:pointer;display:flex;align-items:center;gap:7px;font-size:12.5px;color:#C9834F;background:rgba(201,131,79,0.08);border:1px solid rgba(201,131,79,0.25);padding:6px 12px;border-radius:8px;">
+          <span style="width:6px;height:6px;border-radius:50%;background:#C9834F;"></span>
+          Preguntar a NORI AI
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#8A5E3E;">⌘K</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="flex:1;overflow-y:auto;">
+
+      <!-- ================= DASHBOARD ================= -->
+      <sc-if value="{{ isDashboard }}" hint-placeholder-val="{{ true }}">
+        <div style="padding:28px 28px 48px;">
+          <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:14px;">
+            <div style="background:#1B1F25;border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:20px;">
+              <div style="font-size:12px;color:#9C978F;margin-bottom:10px;">Ventas del mes</div>
+              <div style="font-size:27px;font-weight:700;letter-spacing:-0.6px;">$284,600</div>
+              <div style="font-size:12px;color:#C9834F;margin-top:6px;">↑ 12.4% vs mes anterior</div>
+            </div>
+            <div style="background:#1B1F25;border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:20px;">
+              <div style="font-size:12px;color:#9C978F;margin-bottom:10px;">Utilidad</div>
+              <div style="font-size:27px;font-weight:700;letter-spacing:-0.6px;">$96,400</div>
+              <div style="font-size:12px;color:#7A756D;margin-top:6px;">margen 33.9%</div>
+            </div>
+            <div style="background:#1B1F25;border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:20px;">
+              <div style="font-size:12px;color:#9C978F;margin-bottom:10px;">Producción de hoy</div>
+              <div style="font-size:27px;font-weight:700;letter-spacing:-0.6px;">340 <span style="font-size:14px;color:#7A756D;font-weight:500;">vasos</span></div>
+              <div style="font-size:12px;color:#7A756D;margin-top:6px;">3 lotes completados</div>
+            </div>
+            <div style="background:rgba(217,161,92,0.06);border:1px solid rgba(217,161,92,0.28);border-radius:14px;padding:20px;">
+              <div style="font-size:12px;color:#D9A15C;margin-bottom:10px;">Inventario crítico</div>
+              <div style="font-size:27px;font-weight:700;letter-spacing:-0.6px;color:#D9A15C;">3</div>
+              <div style="font-size:12px;color:#C9A06B;margin-top:6px;">ingredientes bajo mínimo</div>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1.7fr 1fr;gap:14px;margin-bottom:14px;">
+            <div style="background:#1B1F25;border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:22px;">
+              <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:18px;">
+                <span style="font-size:13px;font-weight:600;">Ventas vs. Producción · 14 días</span>
+                <span style="font-size:11px;color:#7A756D;">vasos / día</span>
+              </div>
+              <div style="display:flex;align-items:flex-end;gap:8px;height:130px;">
+                <sc-for list="{{ chartBars }}" as="bar" hint-placeholder-count="14">
+                  <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:3px;height:100%;">
+                    <div style="width:100%;border-radius:3px;background:rgba(143,168,188,0.5);height:{{ bar.prod }}px;"></div>
+                    <div style="width:100%;border-radius:3px;background:#C9834F;height:{{ bar.sales }}px;"></div>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="display:flex;gap:16px;margin-top:14px;font-size:11.5px;color:#9C978F;">
+                <span><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#C9834F;margin-right:6px;"></span>Ventas</span>
+                <span><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:rgba(143,168,188,0.5);margin-right:6px;"></span>Producción</span>
+              </div>
+            </div>
+
+            <div style="background:#1B1F25;border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:22px;">
+              <div style="font-size:13px;font-weight:600;margin-bottom:16px;">Productos más vendidos</div>
+              <div style="display:flex;flex-direction:column;gap:14px;">
+                <sc-for list="{{ topProducts }}" as="p" hint-placeholder-count="4">
+                  <div>
+                    <div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:6px;">
+                      <span>{{ p.name }}</span>
+                      <span style="color:#9C978F;">{{ p.units }} vasos</span>
+                    </div>
+                    <div style="height:5px;border-radius:3px;background:rgba(255,255,255,0.06);overflow:hidden;">
+                      <div style="height:100%;border-radius:3px;background:{{ p.color }};width:{{ p.pct }}%;"></div>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+            <div style="background:#1B1F25;border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:22px;">
+              <div style="font-size:13px;font-weight:600;margin-bottom:14px;">Alertas</div>
+              <div style="display:flex;flex-direction:column;gap:10px;">
+                <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px;"><span style="width:6px;height:6px;border-radius:50%;background:#C1584A;margin-top:5px;flex:none;"></span><span style="color:#C7C2B8;">Leche entera llega a stock mínimo en <b style="color:#EDEAE4;">2 días</b></span></div>
+                <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px;"><span style="width:6px;height:6px;border-radius:50%;background:#D9A15C;margin-top:5px;flex:none;"></span><span style="color:#C7C2B8;">Extracto de vainilla caduca en <b style="color:#EDEAE4;">5 días</b></span></div>
+                <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px;"><span style="width:6px;height:6px;border-radius:50%;background:#8FA8BC;margin-top:5px;flex:none;"></span><span style="color:#C7C2B8;">Meta mensual de ventas al <b style="color:#EDEAE4;">82%</b></span></div>
+              </div>
+            </div>
+            <div style="background:#1B1F25;border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:22px;">
+              <div style="font-size:13px;font-weight:600;margin-bottom:14px;">Actividad reciente</div>
+              <div style="display:flex;flex-direction:column;gap:12px;">
+                <div style="display:flex;gap:10px;font-size:12.5px;color:#C7C2B8;"><span style="color:#7A756D;font-family:'JetBrains Mono',monospace;font-size:11px;flex:none;width:44px;">10:12</span>Venta registrada · Chocolate Proteico ×6 · Uber Eats</div>
+                <div style="display:flex;gap:10px;font-size:12.5px;color:#C7C2B8;"><span style="color:#7A756D;font-family:'JetBrains Mono',monospace;font-size:11px;flex:none;width:44px;">09:40</span>Orden de producción OP-0142 iniciada</div>
+                <div style="display:flex;gap:10px;font-size:12.5px;color:#C7C2B8;"><span style="color:#7A756D;font-family:'JetBrains Mono',monospace;font-size:11px;flex:none;width:44px;">08:55</span>Receta Chocolate actualizada a <b style="color:#EDEAE4;">V5</b></div>
+                <div style="display:flex;gap:10px;font-size:12.5px;color:#C7C2B8;"><span style="color:#7A756D;font-family:'JetBrains Mono',monospace;font-size:11px;flex:none;width:44px;">08:10</span>Recepción de compra · Whey Isolate 20kg</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ================= FORMULADOR ================= -->
+      <sc-if value="{{ isFormulador }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;height:100%;">
+          <!-- ingredientes -->
+          <div style="width:200px;flex:none;border-right:1px solid rgba(255,255,255,0.06);padding:18px 12px;overflow-y:auto;">
+            <div style="font-size:11px;color:#7A756D;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px;">Ingredientes</div>
+            <sc-for list="{{ ingredientRows }}" as="ing" hint-placeholder-count="8">
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 8px;border-radius:8px;margin-bottom:2px;" style-hover="background:rgba(255,255,255,0.04);">
+                <div style="min-width:0;">
+                  <div style="font-size:12.5px;color:#E5E1D9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ ing.name }}</div>
+                  <div style="font-size:10.5px;color:#7A756D;font-family:'JetBrains Mono',monospace;">${{ ing.pricePerKg }}/kg</div>
+                </div>
+                <div onClick="{{ ing.onAdd }}" style="cursor:pointer;flex:none;width:22px;height:22px;border-radius:6px;background:rgba(201,131,79,0.1);color:#C9834F;display:flex;align-items:center;justify-content:center;font-size:15px;line-height:1;">+</div>
+              </div>
+            </sc-for>
+          </div>
+
+          <!-- receta -->
+          <div style="flex:1;padding:20px 24px;overflow-y:auto;min-width:0;">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
+              <span style="font-size:20px;font-weight:700;">Chocolate Proteico</span>
+              <span style="font-size:11px;font-family:'JetBrains Mono',monospace;background:rgba(201,131,79,0.12);color:#C9834F;padding:3px 9px;border-radius:100px;">V5 · vigente</span>
+            </div>
+            <div style="display:flex;gap:6px;margin-bottom:18px;">
+              <sc-for list="{{ versions }}" as="v" hint-placeholder-count="4">
+                <span style="font-size:11px;font-family:'JetBrains Mono',monospace;background:rgba(255,255,255,0.04);color:#7A756D;padding:3px 9px;border-radius:100px;">{{ v }}</span>
+              </sc-for>
+              <span style="margin-left:6px;font-size:11px;color:#7A756D;">las versiones nunca se borran</span>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:6px;overflow-x:auto;">
+              <div style="display:grid;grid-template-columns:minmax(120px,1fr) 60px 64px 20px;gap:8px;font-size:10px;color:#7A756D;text-transform:uppercase;letter-spacing:0.3px;padding:0 10px;min-width:284px;">
+                <span>Ingrediente</span><span>Gramos</span><span>Costo</span><span></span>
+              </div>
+              <sc-for list="{{ recipeRows }}" as="row" hint-placeholder-count="4">
+                <div style="display:grid;grid-template-columns:minmax(120px,1fr) 60px 64px 20px;gap:8px;align-items:center;background:#1B1F25;border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:10px;min-width:284px;">
+                  <div style="min-width:0;">
+                    <div style="font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ row.name }}</div>
+                    <div style="font-size:10px;color:#7A756D;font-family:'JetBrains Mono',monospace;">{{ row.pct }}%</div>
+                  </div>
+                  <input type="number" value="{{ row.grams }}" onChange="{{ row.onChange }}" style="width:100%;min-width:0;background:#20242B;border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:6px 4px;color:#EDEAE4;font-size:11.5px;font-family:'JetBrains Mono',monospace;text-align:center;"></input>
+                  <span style="font-size:11.5px;color:#C7C2B8;font-family:'JetBrains Mono',monospace;white-space:nowrap;">${{ row.cost }}</span>
+                  <div onClick="{{ row.onRemove }}" style="cursor:pointer;width:20px;height:20px;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#7A756D;font-size:13px;flex:none;">×</div>
+                </div>
+              </sc-for>
+            </div>
+
+            <div style="margin-top:24px;background:rgba(201,131,79,0.05);border:1px solid rgba(201,131,79,0.2);border-radius:12px;padding:16px 18px;">
+              <div style="display:flex;gap:9px;align-items:flex-start;">
+                <div style="width:20px;height:20px;border-radius:50%;background:radial-gradient(circle at 35% 30%, #E8C39B, #C9834F 60%, #5C3A22);flex:none;margin-top:1px;"></div>
+                <div>
+                  <div style="font-size:12.5px;font-weight:600;color:#C9834F;margin-bottom:4px;">NORI AI sugiere</div>
+                  <div style="font-size:13px;color:#C7C2B8;line-height:1.6;">Si reemplazas el eritritol por alulosa, el costo aumenta <b style="color:#EDEAE4;">$0.84 por vaso</b> pero mejora la textura un <b style="color:#EDEAE4;">12%</b>.</div>
+                  <div style="display:flex;gap:8px;margin-top:10px;">
+                    <span style="font-size:12px;background:#C9834F;color:#241209;font-weight:600;padding:6px 12px;border-radius:7px;cursor:pointer;">Aplicar cambios</span>
+                    <span style="font-size:12px;color:#9C978F;padding:6px 12px;cursor:pointer;">Descartar</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- panel vivo -->
+          <div style="width:228px;flex:none;border-left:1px solid rgba(255,255,255,0.06);padding:20px 14px;overflow-y:auto;min-width:0;">
+            <div style="font-size:11px;color:#7A756D;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:14px;">En vivo</div>
+            <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:16px;">
+              <div style="background:#1B1F25;border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:10px;min-width:0;">
+                <div style="font-size:10.5px;color:#9C978F;">Costo del lote</div>
+                <div style="font-size:18px;font-weight:700;font-family:'JetBrains Mono',monospace;">${{ liveCostLote }}</div>
+              </div>
+              <div style="background:#1B1F25;border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:12px;">
+                <div style="font-size:10.5px;color:#9C978F;">Peso final</div>
+                <div style="font-size:18px;font-weight:700;font-family:'JetBrains Mono',monospace;">{{ liveWeight }}g</div>
+              </div>
+              <div style="background:#1B1F25;border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:12px;">
+                <div style="font-size:10.5px;color:#9C978F;">Costo / litro</div>
+                <div style="font-size:16px;font-weight:700;font-family:'JetBrains Mono',monospace;">${{ liveCostLiter }}</div>
+              </div>
+              <div style="background:#1B1F25;border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:12px;">
+                <div style="font-size:10.5px;color:#9C978F;">Costo / vaso</div>
+                <div style="font-size:16px;font-weight:700;font-family:'JetBrains Mono',monospace;color:#C9834F;">${{ liveCostVaso }}</div>
+              </div>
+            </div>
+
+            <div style="font-size:11px;color:#7A756D;text-transform:uppercase;letter-spacing:0.5px;margin:16px 0 10px;">Nutrición por vaso</div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <div style="display:flex;justify-content:space-between;font-size:12.5px;"><span style="color:#9C978F;">Proteína</span><span style="font-family:'JetBrains Mono',monospace;font-weight:600;">{{ liveProtein }} g</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:12.5px;"><span style="color:#9C978F;">Calorías</span><span style="font-family:'JetBrains Mono',monospace;font-weight:600;">{{ liveCalories }}</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:12.5px;"><span style="color:#9C978F;">Carbohidratos</span><span style="font-family:'JetBrains Mono',monospace;font-weight:600;">{{ liveCarbs }} g</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:12.5px;"><span style="color:#9C978F;">Grasas</span><span style="font-family:'JetBrains Mono',monospace;font-weight:600;">{{ liveFat }} g</span></div>
+            </div>
+
+            <div style="margin-top:18px;background:rgba(143,168,188,0.06);border:1px solid rgba(143,168,188,0.22);border-radius:10px;padding:12px;">
+              <div style="font-size:10.5px;color:#9C978F;margin-bottom:4px;">Margen estimado (venta $89)</div>
+              <div style="font-size:19px;font-weight:700;color:#8FA8BC;font-family:'JetBrains Mono',monospace;">{{ liveMargin }}%</div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ================= NUTRIMENTAL ================= -->
+      <sc-if value="{{ isNutrimental }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:28px;display:flex;gap:24px;">
+          <div style="width:380px;flex:none;background:#fff;color:#15181C;border-radius:14px;padding:22px 26px;font-family:'Instrument Sans',sans-serif;">
+            <div style="font-size:16px;font-weight:800;border-bottom:8px solid #15181C;padding-bottom:6px;margin-bottom:6px;">Información Nutrimental</div>
+            <div style="font-size:11px;color:#444;margin-bottom:10px;">Tamaño de la porción: 1 vaso (240 mL) — Porciones por envase: 1</div>
+            <div style="display:flex;justify-content:space-between;font-size:11px;color:#444;border-bottom:1px solid #15181C;padding-bottom:4px;margin-bottom:4px;"><span>Por 100 g</span><span>Por vaso</span></div>
+            <div style="border-bottom:6px solid #15181C;padding-bottom:6px;margin-bottom:6px;">
+              <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-size:14px;font-weight:700;line-height:1.3;"><span style="white-space:nowrap;">Energía</span><span style="white-space:nowrap;flex:none;">{{ nutriPer100.kcal }} / {{ nutriPerVaso.kcal }} kcal</span></div>
+            </div>
+            <sc-for list="{{ nutriRows }}" as="n" hint-placeholder-count="6">
+              <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-size:12px;line-height:1.4;padding:5px 0;border-bottom:1px solid #ddd;"><span style="white-space:nowrap;">{{ n.label }}</span><span style="white-space:nowrap;flex:none;">{{ n.per100 }}{{ n.unit }} / {{ n.perVaso }}{{ n.unit }}</span></div>
+            </sc-for>
+            <div style="font-size:9.5px;color:#666;margin-top:10px;line-height:1.4;">% Valores Diarios basados en una dieta de 2000 kcal. Cálculo generado automáticamente — validar antes de imprimir en empaque (NOM-051).</div>
+          </div>
+
+          <div style="flex:1;display:flex;flex-direction:column;gap:16px;">
+            <div style="display:flex;gap:10px;">
+              <span onClick="{{ noop }}" style="cursor:pointer;font-size:12.5px;background:#1B1F25;border:1px solid rgba(255,255,255,0.1);padding:9px 16px;border-radius:9px;">Exportar PNG</span>
+              <span onClick="{{ noop }}" style="cursor:pointer;font-size:12.5px;background:#1B1F25;border:1px solid rgba(255,255,255,0.1);padding:9px 16px;border-radius:9px;">Exportar PDF</span>
+              <span onClick="{{ doPrint }}" style="cursor:pointer;font-size:12.5px;background:#C9834F;color:#241209;font-weight:600;padding:9px 16px;border-radius:9px;">Imprimir</span>
+            </div>
+            <div style="background:#1B1F25;border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:20px;">
+              <div style="font-size:13px;font-weight:600;margin-bottom:14px;">Validación de sellos NOM-051</div>
+              <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;">
+                <span style="font-size:12px;background:rgba(201,131,79,0.1);color:#C9834F;padding:6px 12px;border-radius:100px;border:1px solid rgba(201,131,79,0.25);">✓ Sin exceso de azúcares</span>
+                <span style="font-size:12px;background:rgba(201,131,79,0.1);color:#C9834F;padding:6px 12px;border-radius:100px;border:1px solid rgba(201,131,79,0.25);">✓ Sin exceso de calorías</span>
+                <span style="font-size:12px;background:rgba(217,161,92,0.1);color:#D9A15C;padding:6px 12px;border-radius:100px;border:1px solid rgba(217,161,92,0.25);">△ Grasas saturadas cerca del límite</span>
+              </div>
+              <div style="font-size:12px;color:#9C978F;line-height:1.6;">Cálculo estimado a partir de la receta vigente (V5). Requiere validación de laboratorio antes de usarse en etiquetado final o producción a escala.</div>
+            </div>
+            <div style="background:#1B1F25;border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:20px;">
+              <div style="font-size:13px;font-weight:600;margin-bottom:14px;">Comparar versiones</div>
+              <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;">
+                <sc-for list="{{ versionCompare }}" as="vc" hint-placeholder-count="4">
+                  <div style="background:#20242B;border-radius:9px;padding:12px;text-align:center;">
+                    <div style="font-size:11px;font-family:'JetBrains Mono',monospace;color:#7A756D;margin-bottom:6px;">{{ vc.v }}</div>
+                    <div style="font-size:16px;font-weight:700;">{{ vc.protein }}g</div>
+                    <div style="font-size:10.5px;color:#9C978F;">proteína</div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ================= INVENTARIO ================= -->
+      <sc-if value="{{ isInventario }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:28px;">
+          <div style="display:flex;gap:10px;margin-bottom:20px;">
+            <sc-for list="{{ invFilters }}" as="f" hint-placeholder-count="4">
+              <span style="{{ f.style }}" onClick="{{ f.onClick }}">{{ f.label }}</span>
+            </sc-for>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:22px;">
+            <sc-for list="{{ inventoryCards }}" as="it" hint-placeholder-count="8">
+              <div style="background:#1B1F25;border:1px solid rgba(255,255,255,0.07);border-radius:13px;padding:16px;">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+                  <span style="font-size:13.5px;font-weight:600;">{{ it.name }}</span>
+                  <span style="{{ it.badgeStyle }}">{{ it.badgeLabel }}</span>
+                </div>
+                <div style="font-size:22px;font-weight:700;font-family:'JetBrains Mono',monospace;margin-bottom:4px;">{{ it.stock }}<span style="font-size:12px;color:#7A756D;font-weight:500;"> {{ it.unit }}</span></div>
+                <div style="height:5px;border-radius:3px;background:rgba(255,255,255,0.06);overflow:hidden;margin-bottom:8px;">
+                  <div style="height:100%;background:{{ it.barColor }};width:{{ it.barPct }}%;"></div>
+                </div>
+                <div style="font-size:11px;color:#7A756D;">mín. {{ it.min }} {{ it.unit }} · lote {{ it.lote }}</div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="background:#1B1F25;border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:20px;">
+            <div style="font-size:13px;font-weight:600;margin-bottom:14px;">Movimientos recientes</div>
+            <div style="display:flex;flex-direction:column;gap:2px;">
+              <sc-for list="{{ movements }}" as="m" hint-placeholder-count="5">
+                <div style="display:grid;grid-template-columns:90px 1.3fr 0.7fr 0.7fr;gap:10px;padding:10px 6px;border-bottom:1px solid rgba(255,255,255,0.05);font-size:12.5px;align-items:center;">
+                  <span style="color:#7A756D;font-family:'JetBrains Mono',monospace;font-size:11px;">{{ m.date }}</span>
+                  <span>{{ m.desc }}</span>
+                  <span style="{{ m.typeStyle }}">{{ m.type }}</span>
+                  <span style="font-family:'JetBrains Mono',monospace;color:#C7C2B8;">{{ m.qty }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ================= PRODUCCION ================= -->
+      <sc-if value="{{ isProduccion }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;height:100%;">
+          <div style="width:340px;flex:none;border-right:1px solid rgba(255,255,255,0.06);padding:18px;overflow-y:auto;">
+            <div style="font-size:11px;color:#7A756D;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px;">Órdenes de producción</div>
+            <sc-for list="{{ orders }}" as="o" hint-placeholder-count="4">
+              <div onClick="{{ o.onSelect }}" style="{{ o.rowStyle }}">
+                <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+                  <span style="font-size:12.5px;font-family:'JetBrains Mono',monospace;color:#9C978F;">{{ o.code }}</span>
+                  <span style="{{ o.statusStyle }}">{{ o.status }}</span>
+                </div>
+                <div style="font-size:14px;font-weight:600;margin-bottom:4px;">{{ o.recipe }}</div>
+                <div style="font-size:11.5px;color:#7A756D;">{{ o.date }} · {{ o.operator }}</div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="flex:1;padding:24px 28px;overflow-y:auto;min-width:0;">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+              <span style="font-size:20px;font-weight:700;">{{ selectedOrder.recipe }}</span>
+              <span style="{{ selectedOrder.statusStyle }}">{{ selectedOrder.status }}</span>
+            </div>
+            <div style="font-size:12.5px;color:#9C978F;margin-bottom:22px;">{{ selectedOrder.code }} · lote {{ selectedOrder.lote }}</div>
+            <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:20px;">
+              <div style="background:#1B1F25;border:1px solid rgba(255,255,255,0.07);border-radius:11px;padding:14px;"><div style="font-size:11px;color:#9C978F;margin-bottom:6px;">Temperatura</div><div style="font-size:17px;font-weight:700;font-family:'JetBrains Mono',monospace;">{{ selectedOrder.temp }}°C</div></div>
+              <div style="background:#1B1F25;border:1px solid rgba(255,255,255,0.07);border-radius:11px;padding:14px;"><div style="font-size:11px;color:#9C978F;margin-bottom:6px;">Rendimiento</div><div style="font-size:17px;font-weight:700;font-family:'JetBrains Mono',monospace;">{{ selectedOrder.yield }} vasos</div></div>
+              <div style="background:#1B1F25;border:1px solid rgba(255,255,255,0.07);border-radius:11px;padding:14px;"><div style="font-size:11px;color:#9C978F;margin-bottom:6px;">Merma</div><div style="font-size:17px;font-weight:700;font-family:'JetBrains Mono',monospace;">{{ selectedOrder.merma }}%</div></div>
+              <div style="background:#1B1F25;border:1px solid rgba(255,255,255,0.07);border-radius:11px;padding:14px;"><div style="font-size:11px;color:#9C978F;margin-bottom:6px;">Operador</div><div style="font-size:15px;font-weight:600;">{{ selectedOrder.operator }}</div></div>
+            </div>
+            <div style="font-size:12px;color:#7A756D;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">Fotografías del lote</div>
+            <div style="display:flex;gap:10px;margin-bottom:22px;">
+              <div style="width:120px;height:88px;border-radius:10px;background:#1D2127;border:1px dashed rgba(255,255,255,0.14);display:flex;align-items:center;justify-content:center;font-size:10.5px;color:#7A756D;">foto 1</div>
+              <div style="width:120px;height:88px;border-radius:10px;background:#1D2127;border:1px dashed rgba(255,255,255,0.14);display:flex;align-items:center;justify-content:center;font-size:10.5px;color:#7A756D;">foto 2</div>
+              <div style="width:120px;height:88px;border-radius:10px;background:#1D2127;border:1px dashed rgba(255,255,255,0.14);display:flex;align-items:center;justify-content:center;font-size:10.5px;color:#7A756D;">foto 3</div>
+            </div>
+            <div style="font-size:12px;color:#7A756D;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">Observaciones</div>
+            <div style="background:#1B1F25;border:1px solid rgba(255,255,255,0.07);border-radius:11px;padding:14px;font-size:13px;color:#C7C2B8;line-height:1.6;">{{ selectedOrder.notes }}</div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ================= VENTAS ================= -->
+      <sc-if value="{{ isVentas }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:28px;">
+          <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:14px;">
+            <div style="background:#1B1F25;border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:18px;"><div style="font-size:12px;color:#9C978F;margin-bottom:8px;">Ingresos del mes</div><div style="font-size:23px;font-weight:700;">$284,600</div></div>
+            <div style="background:#1B1F25;border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:18px;"><div style="font-size:12px;color:#9C978F;margin-bottom:8px;">Ticket promedio</div><div style="font-size:23px;font-weight:700;">$96</div></div>
+            <div style="background:#1B1F25;border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:18px;"><div style="font-size:12px;color:#9C978F;margin-bottom:8px;">Pedidos</div><div style="font-size:23px;font-weight:700;">2,964</div></div>
+            <div style="background:#1B1F25;border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:18px;"><div style="font-size:12px;color:#9C978F;margin-bottom:8px;">Clientes nuevos</div><div style="font-size:23px;font-weight:700;">118</div></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
+            <div style="background:#1B1F25;border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:20px;">
+              <div style="font-size:13px;font-weight:600;margin-bottom:16px;">Ingresos por canal</div>
+              <div style="display:flex;flex-direction:column;gap:12px;">
+                <sc-for list="{{ channels }}" as="c" hint-placeholder-count="4">
+                  <div>
+                    <div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:6px;"><span>{{ c.name }}</span><span style="color:#9C978F;">${{ c.amount }}</span></div>
+                    <div style="height:6px;border-radius:3px;background:rgba(255,255,255,0.06);"><div style="height:100%;border-radius:3px;background:{{ c.color }};width:{{ c.pct }}%;"></div></div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+            <div style="background:#1B1F25;border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:20px;">
+              <div style="font-size:13px;font-weight:600;margin-bottom:16px;">Métodos de pago</div>
+              <div style="display:flex;flex-direction:column;gap:12px;">
+                <sc-for list="{{ payMethods }}" as="pm" hint-placeholder-count="3">
+                  <div>
+                    <div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:6px;"><span>{{ pm.name }}</span><span style="color:#9C978F;">{{ pm.pct }}%</span></div>
+                    <div style="height:6px;border-radius:3px;background:rgba(255,255,255,0.06);"><div style="height:100%;border-radius:3px;background:{{ pm.color }};width:{{ pm.pct }}%;"></div></div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+          <div style="background:#1B1F25;border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:20px;">
+            <div style="font-size:13px;font-weight:600;margin-bottom:14px;">Pedidos recientes</div>
+            <div style="display:flex;flex-direction:column;gap:2px;">
+              <sc-for list="{{ recentOrders }}" as="ro" hint-placeholder-count="5">
+                <div style="display:grid;grid-template-columns:32px 1.2fr 0.8fr 0.6fr 0.7fr;gap:12px;align-items:center;padding:10px 6px;border-bottom:1px solid rgba(255,255,255,0.05);font-size:12.5px;">
+                  <span style="width:26px;height:26px;border-radius:50%;background:{{ ro.avatarColor }};display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:600;color:#15181C;">{{ ro.initials }}</span>
+                  <span>{{ ro.client }}</span>
+                  <span style="color:#9C978F;">{{ ro.channel }}</span>
+                  <span style="font-family:'JetBrains Mono',monospace;">${{ ro.amount }}</span>
+                  <span style="{{ ro.statusStyle }}">{{ ro.status }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ================= NORI AI ================= -->
+      <sc-if value="{{ isNoriAI }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;height:100%;">
+          <div style="width:270px;flex:none;border-right:1px solid rgba(255,255,255,0.06);padding:18px 14px;overflow-y:auto;">
+            <div onClick="{{ newChat }}" style="cursor:pointer;font-size:12.5px;text-align:center;background:rgba(201,131,79,0.1);color:#C9834F;border:1px solid rgba(201,131,79,0.25);padding:9px;border-radius:9px;margin-bottom:16px;">+ Nueva conversación</div>
+            <div style="font-size:11px;color:#7A756D;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">Historial</div>
+            <sc-for list="{{ chatHistory }}" as="h" hint-placeholder-count="5">
+              <div style="{{ h.style }}">{{ h.title }}</div>
+            </sc-for>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;min-width:0;">
+            <div style="flex:1;overflow-y:auto;padding:24px 32px;display:flex;flex-direction:column;gap:18px;max-width:760px;">
+              <sc-for list="{{ chatMessages }}" as="msg" hint-placeholder-count="4">
+                <div style="display:flex;gap:12px;{{ msg.rowStyle }}">
+                  <div style="width:26px;height:26px;border-radius:50%;flex:none;{{ msg.avatarStyle }}"></div>
+                  <div style="font-size:13.5px;line-height:1.65;color:#E2DED6;white-space:pre-line;">{{ msg.text }}</div>
+                </div>
+              </sc-for>
+            </div>
+            <div style="padding:16px 32px 24px;">
+              <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
+                <sc-for list="{{ quickPrompts }}" as="qp" hint-placeholder-count="4">
+                  <span onClick="{{ qp.onClick }}" style="cursor:pointer;font-size:12px;background:#1B1F25;border:1px solid rgba(255,255,255,0.09);color:#C7C2B8;padding:7px 13px;border-radius:100px;">{{ qp.text }}</span>
+                </sc-for>
+              </div>
+              <div style="display:flex;gap:10px;align-items:center;background:#1B1F25;border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:6px 6px 6px 16px;">
+                <input value="{{ chatInput }}" onChange="{{ onChatInputChange }}" onKeyDown="{{ onChatKeyDown }}" placeholder="Pregúntale algo a NORI AI…" style="flex:1;background:transparent;border:none;outline:none;color:#EDEAE4;font-size:13.5px;padding:8px 0;"></input>
+                <span onClick="{{ sendChat }}" style="cursor:pointer;background:#C9834F;color:#241209;font-weight:600;font-size:12.5px;padding:9px 16px;border-radius:8px;">Enviar</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+    </div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const INGREDIENTS = {
+  whey: { name: 'Whey Isolate', pricePerKg: 780, protein: 84, carbs: 4, fat: 2, fiber: 0, sodium: 380, sugar: 2 },
+  leche: { name: 'Leche Entera', pricePerKg: 24, protein: 3.2, carbs: 4.8, fat: 3.5, fiber: 0, sodium: 44, sugar: 4.8 },
+  eritritol: { name: 'Eritritol', pricePerKg: 145, protein: 0, carbs: 100, fat: 0, fiber: 0, sodium: 0, sugar: 0 },
+  cacao: { name: 'Cacao en Polvo', pricePerKg: 175, protein: 20, carbs: 11, fat: 12, fiber: 33, sodium: 20, sugar: 1 },
+  crema: { name: 'Crema para Batir', pricePerKg: 90, protein: 2.1, carbs: 3, fat: 36, fiber: 0, sodium: 38, sugar: 3 },
+  xantana: { name: 'Goma Xantana', pricePerKg: 320, protein: 0, carbs: 0, fat: 0, fiber: 100, sodium: 0, sugar: 0 },
+  vainilla: { name: 'Extracto de Vainilla', pricePerKg: 1200, protein: 0, carbs: 12, fat: 0, fiber: 0, sodium: 5, sugar: 12 },
+  fresa: { name: 'Fresa Liofilizada', pricePerKg: 650, protein: 4, carbs: 78, fat: 0.5, fiber: 20, sodium: 9, sugar: 60 },
+};
+
+class Component extends DCLogic {
+  state = {
+    screen: 'dashboard',
+    recipe: [
+      { id: 'whey', grams: 380 },
+      { id: 'leche', grams: 2400 },
+      { id: 'eritritol', grams: 80 },
+      { id: 'cacao', grams: 120 },
+    ],
+    invFilter: 'all',
+    selectedOrderId: 'OP-0142',
+    chatInput: '',
+    chatMessages: [
+      { from: 'user', text: '¿Qué pasa si reduzco el eritritol 20g y subo la leche 20g en Chocolate V5?' },
+      { from: 'ai', text: 'El costo del lote baja $2.30 y el peso final no cambia.\nProteína por vaso baja de 38.2g a 37.6g — sigue arriba de tu mínimo de 35g.\nAzúcar por vaso sube de 10.5g a 10.9g, todavía sin activar sello NOM.\n\n¿Quieres que genere la V6 con este ajuste?' },
+    ],
+  };
+
+  toggleScreen(s) { this.setState({ screen: s }); }
+
+  updateGrams(id, value) {
+    const grams = Math.max(0, parseFloat(value) || 0);
+    this.setState(s => ({ recipe: s.recipe.map(r => r.id === id ? { ...r, grams } : r) }));
+  }
+  removeIngredient(id) {
+    this.setState(s => ({ recipe: s.recipe.filter(r => r.id !== id) }));
+  }
+  addIngredient(id) {
+    this.setState(s => s.recipe.some(r => r.id === id) ? s : { recipe: [...s.recipe, { id, grams: 50 }] });
+  }
+
+  onChatInputChange(e) { this.setState({ chatInput: e.target.value }); }
+  onChatKeyDown(e) { if (e.key === 'Enter') this.sendChat(); }
+  sendChat(presetText) {
+    const text = typeof presetText === 'string' ? presetText : this.state.chatInput;
+    if (!text || !text.trim()) return;
+    const responses = [
+      'Analizando tu base de recetas… la V5 de Chocolate Proteico tiene el mejor margen actual, 60.6% a precio de venta $89.',
+      'El precio de la Whey Isolate subió 8% este trimestre — es el ingrediente con mayor variación de costo en tu catálogo.',
+      'Con tu inventario actual de leche, puedo generar 11 lotes más antes de necesitar una nueva compra — aproximadamente 6 días al ritmo de venta actual.',
+      'Genial — puedo preparar un borrador de receta de Vainilla V1 optimizada para 35g de proteína y el menor costo posible. ¿Lo agrego como nueva versión?',
+    ];
+    const ai = responses[Math.floor(Math.random() * responses.length)];
+    this.setState(s => ({
+      chatMessages: [...s.chatMessages, { from: 'user', text }, { from: 'ai', text: ai }],
+      chatInput: '',
+    }));
+  }
+  newChat() { this.setState({ chatMessages: [] }); }
+
+  doPrint() { window.print(); }
+
+  renderVals() {
+    const s = this.state;
+    const navStyle = (id) => {
+      const active = s.screen === id;
+      return {
+        display: 'flex', alignItems: 'center', gap: '11px', padding: '9px 10px', borderRadius: '8px',
+        cursor: 'pointer', fontSize: '13px', marginBottom: '1px',
+        color: active ? '#EDEAE4' : '#9C978F',
+        background: active ? 'rgba(255,255,255,0.06)' : 'transparent',
+      };
+    };
+
+    const titles = { dashboard: 'Dashboard', formulador: 'Formulador Inteligente', nutrimental: 'Tabla Nutrimental', inventario: 'Inventario', produccion: 'Producción', ventas: 'Ventas', noriai: 'NORI AI' };
+
+    // ---- formulador live calc ----
+    const rows = s.recipe.map(r => {
+      const ing = INGREDIENTS[r.id];
+      return { ...r, ing, cost: (r.grams * ing.pricePerKg / 1000) };
+    });
+    const totalGrams = rows.reduce((a, r) => a + r.grams, 0) || 1;
+    const totalCost = rows.reduce((a, r) => a + r.cost, 0);
+    const totals = { protein: 0, carbs: 0, fat: 0, fiber: 0, sodium: 0, sugar: 0 };
+    rows.forEach(r => {
+      const f = r.grams / 100;
+      totals.protein += f * r.ing.protein;
+      totals.carbs += f * r.ing.carbs;
+      totals.fat += f * r.ing.fat;
+      totals.fiber += f * r.ing.fiber;
+      totals.sodium += f * r.ing.sodium;
+      totals.sugar += f * r.ing.sugar;
+    });
+    const volumeMl = totalGrams / 1.05;
+    const liters = volumeMl / 1000;
+    const vasoSize = 240;
+    const vasos = Math.max(1, Math.floor(volumeMl / vasoSize));
+    const costPerLiter = totalCost / (liters || 1);
+    const costPerVaso = totalCost / vasos;
+    const proteinVaso = totals.protein / vasos;
+    const carbsVaso = totals.carbs / vasos;
+    const fatVaso = totals.fat / vasos;
+    const fiberVaso = totals.fiber / vasos;
+    const sodiumVaso = totals.sodium / vasos;
+    const sugarVaso = totals.sugar / vasos;
+    const caloriesVaso = proteinVaso * 4 + carbsVaso * 4 + fatVaso * 9;
+    const sellPrice = 89;
+    const margin = ((sellPrice - costPerVaso) / sellPrice) * 100;
+
+    const per100 = { kcal: Math.round(caloriesVaso / (240 / 100)) };
+    // recompute per-100g basis directly from batch totals for the nutrition table
+    const kcalPer100g = (totals.protein * 4 + totals.carbs * 4 + totals.fat * 9) / totalGrams * 100;
+    const nutriPer100 = { kcal: Math.round(kcalPer100g) };
+    const nutriPerVaso = { kcal: Math.round(caloriesVaso) };
+    const per100g = (v) => (v / totalGrams * 100);
+
+    const recipeRows = rows.map(r => ({
+      id: r.id, name: r.ing.name, grams: r.grams,
+      pct: ((r.grams / totalGrams) * 100).toFixed(1),
+      cost: r.cost.toFixed(2),
+      onChange: (e) => this.updateGrams(r.id, e.target.value),
+      onRemove: () => this.removeIngredient(r.id),
+    }));
+
+    const ingredientRows = Object.keys(INGREDIENTS).map(id => ({
+      id, name: INGREDIENTS[id].name, pricePerKg: INGREDIENTS[id].pricePerKg,
+      onAdd: () => this.addIngredient(id),
+    }));
+
+    // ---- inventory ----
+    const invAll = [
+      { name: 'Leche Entera', stock: 44, unit: 'L', min: 60, lote: 'L-0231', crit: true },
+      { name: 'Whey Isolate', stock: 18, unit: 'kg', min: 15, lote: 'L-0198', crit: false },
+      { name: 'Eritritol', stock: 6, unit: 'kg', min: 12, lote: 'L-0177', crit: true },
+      { name: 'Cacao en Polvo', stock: 15, unit: 'kg', min: 8, lote: 'L-0209', crit: false },
+      { name: 'Extracto de Vainilla', stock: 1.2, unit: 'L', min: 2, lote: 'L-0155', crit: true },
+      { name: 'Crema para Batir', stock: 60, unit: 'L', min: 30, lote: 'L-0220', crit: false },
+      { name: 'Goma Xantana', stock: 3, unit: 'kg', min: 2, lote: 'L-0140', crit: false },
+      { name: 'Fresa Liofilizada', stock: 6, unit: 'kg', min: 4, lote: 'L-0165', crit: false },
+    ];
+    const inventoryCards = invAll.map(it => {
+      const pct = Math.min(100, (it.stock / (it.min * 2)) * 100);
+      return {
+        ...it,
+        badgeLabel: it.crit ? 'Stock bajo' : 'OK',
+        badgeStyle: `font-size:10.5px;padding:3px 9px;border-radius:100px;background:${it.crit ? 'rgba(193,88,74,0.12)' : 'rgba(201,131,79,0.1)'};color:${it.crit ? '#C1584A' : '#C9834F'};`,
+        barColor: it.crit ? '#C1584A' : '#C9834F',
+        barPct: pct.toFixed(0),
+      };
+    });
+    const invFilters = ['all', 'crit', 'ok'].map(k => ({
+      key: k, label: k === 'all' ? 'Todos' : k === 'crit' ? 'Stock bajo' : 'Suficiente',
+      onClick: () => this.setState({ invFilter: k }),
+      style: `cursor:pointer;font-size:12.5px;padding:8px 14px;border-radius:9px;background:${s.invFilter === k ? '#C9834F' : '#1B1F25'};color:${s.invFilter === k ? '#241209' : '#9C978F'};border:1px solid ${s.invFilter === k ? 'transparent' : 'rgba(255,255,255,0.08)'};`,
+    }));
+    const movements = [
+      { date: '02 Jul', desc: 'Recepción de compra · Whey Isolate', type: 'Entrada', qty: '+20 kg', typeStyle: 'color:#C9834F;font-size:11.5px;' },
+      { date: '02 Jul', desc: 'Consumo en OP-0142 · Chocolate V5', type: 'Salida', qty: '-380 g', typeStyle: 'color:#C1584A;font-size:11.5px;' },
+      { date: '01 Jul', desc: 'Ajuste por conteo físico · Cacao', type: 'Ajuste', qty: '-0.4 kg', typeStyle: 'color:#D9A15C;font-size:11.5px;' },
+      { date: '30 Jun', desc: 'Consumo en OP-0141 · Vainilla V3', type: 'Salida', qty: '-2.1 L', typeStyle: 'color:#C1584A;font-size:11.5px;' },
+      { date: '29 Jun', desc: 'Recepción de compra · Leche Entera', type: 'Entrada', qty: '+200 L', typeStyle: 'color:#C9834F;font-size:11.5px;' },
+    ];
+
+    // ---- produccion ----
+    const ordersAll = [
+      { code: 'OP-0142', recipe: 'Chocolate Proteico V5', date: '02 Jul', operator: 'Luis Ramírez', status: 'En proceso', lote: 'L-0721', temp: '-18', yield: 340, merma: 2.1, notes: 'Batido homogéneo, sin grumos. Congelación dentro del rango esperado.' },
+      { code: 'OP-0141', recipe: 'Vainilla Proteica V3', date: '30 Jun', operator: 'Ana Torres', status: 'Completada', lote: 'L-0714', temp: '-19', yield: 288, merma: 1.4, notes: 'Rendimiento sobre lo esperado. Textura aprobada por control de calidad.' },
+      { code: 'OP-0140', recipe: 'Fresa Proteica V2', date: '28 Jun', operator: 'Luis Ramírez', status: 'Completada', lote: 'L-0702', temp: '-18', yield: 210, merma: 3.2, notes: 'Merma ligeramente alta por derrame en envasado — revisar boquilla.' },
+      { code: 'OP-0139', recipe: 'Mocha Proteico V1', date: '25 Jun', operator: 'Ana Torres', status: 'Cancelada', lote: 'L-0688', temp: '—', yield: 0, merma: 0, notes: 'Cancelada por falta de café liofilizado en inventario.' },
+    ];
+    const statusColor = (st) => st === 'Completada' ? '#C9834F' : st === 'En proceso' ? '#D9A15C' : '#C1584A';
+    const orders = ordersAll.map(o => ({
+      ...o,
+      onSelect: () => this.setState({ selectedOrderId: o.code }),
+      rowStyle: `cursor:pointer;padding:14px;border-radius:11px;margin-bottom:8px;background:${s.selectedOrderId === o.code ? 'rgba(201,131,79,0.06)' : '#1B1F25'};border:1px solid ${s.selectedOrderId === o.code ? 'rgba(201,131,79,0.28)' : 'rgba(255,255,255,0.06)'};`,
+      statusStyle: `font-size:10.5px;padding:3px 9px;border-radius:100px;color:${statusColor(o.status)};background:${statusColor(o.status)}1A;`,
+    }));
+    const selOrder = ordersAll.find(o => o.code === s.selectedOrderId) || ordersAll[0];
+    const selectedOrder = { ...selOrder, statusStyle: `font-size:11px;padding:4px 11px;border-radius:100px;color:${statusColor(selOrder.status)};background:${statusColor(selOrder.status)}1A;` };
+
+    // ---- ventas ----
+    const channels = [
+      { name: 'Venta directa', amount: '128,400', pct: 45, color: '#C9834F' },
+      { name: 'Uber Eats', amount: '76,200', pct: 27, color: '#8FA8BC' },
+      { name: 'Rappi', amount: '52,900', pct: 19, color: '#D9A15C' },
+      { name: 'Mayoristas', amount: '27,100', pct: 9, color: '#9C978F' },
+    ];
+    const payMethods = [
+      { name: 'Tarjeta', pct: 62, color: '#C9834F' },
+      { name: 'Efectivo', pct: 23, color: '#8FA8BC' },
+      { name: 'Transferencia', pct: 15, color: '#D9A15C' },
+    ];
+    const recentOrders = [
+      { initials: 'JP', client: 'Javier Peña', channel: 'Uber Eats', amount: 267, status: 'Pagado', avatarColor: '#C9834F', statusStyle: 'color:#C9834F;font-size:11.5px;' },
+      { initials: 'RC', client: 'Renata Cortés', channel: 'Venta directa', amount: 178, status: 'Pagado', avatarColor: '#8FA8BC', statusStyle: 'color:#C9834F;font-size:11.5px;' },
+      { initials: 'GS', client: 'Grupo Sano Mayoreo', channel: 'Mayoristas', amount: 4200, status: 'Pendiente', avatarColor: '#D9A15C', statusStyle: 'color:#D9A15C;font-size:11.5px;' },
+      { initials: 'MT', client: 'Mariana Tello', channel: 'Rappi', amount: 89, status: 'Pagado', avatarColor: '#C1584A', statusStyle: 'color:#C9834F;font-size:11.5px;' },
+      { initials: 'DL', client: 'Diego López', channel: 'Venta directa', amount: 178, status: 'Pagado', avatarColor: '#C9834F', statusStyle: 'color:#C9834F;font-size:11.5px;' },
+    ];
+
+    // ---- chart bars ----
+    const chartSales = [40,52,48,60,58,66,72,68,74,80,76,84,90,86];
+    const chartProd = [46,50,52,58,60,64,70,66,72,78,74,80,86,84];
+    const chartBars = chartSales.map((v, i) => ({ sales: v, prod: chartProd[i] }));
+    const topProducts = [
+      { name: 'Chocolate Proteico', units: 1240, pct: 100, color: '#C9834F' },
+      { name: 'Vainilla Proteica', units: 890, pct: 72, color: '#8FA8BC' },
+      { name: 'Fresa Proteica', units: 640, pct: 52, color: '#D9A15C' },
+      { name: 'Mocha Proteico', units: 410, pct: 33, color: '#9C978F' },
+    ];
+
+    // ---- nutrimental table ----
+    const nutriRows = [
+      { label: 'Grasas', per100: per100g(totals.fat).toFixed(1), perVaso: fatVaso.toFixed(1), unit: 'g' },
+      { label: 'Carbohidratos', per100: per100g(totals.carbs).toFixed(1), perVaso: carbsVaso.toFixed(1), unit: 'g' },
+      { label: 'Azúcares', per100: per100g(totals.sugar).toFixed(1), perVaso: sugarVaso.toFixed(1), unit: 'g' },
+      { label: 'Fibra dietética', per100: per100g(totals.fiber).toFixed(1), perVaso: fiberVaso.toFixed(1), unit: 'g' },
+      { label: 'Proteína', per100: per100g(totals.protein).toFixed(1), perVaso: proteinVaso.toFixed(1), unit: 'g' },
+      { label: 'Sodio', per100: per100g(totals.sodium).toFixed(0), perVaso: sodiumVaso.toFixed(0), unit: 'mg' },
+    ];
+    const versionCompare = [
+      { v: 'V2', protein: 31.4 }, { v: 'V3', protein: 34.0 }, { v: 'V4', protein: 36.5 }, { v: 'V5', protein: proteinVaso.toFixed(1) },
+    ];
+
+    // ---- chat ----
+    const chatHistory = [
+      { title: 'Receta con menor costo', active: true },
+      { title: 'Proveedor conveniente lácteos' },
+      { title: 'Proyección de ventas Q3' },
+      { title: 'Optimizar Vainilla V3' },
+      { title: 'Sellos NOM Fresa V2' },
+    ].map(h => ({ ...h, style: `padding:10px 10px;border-radius:8px;font-size:12.5px;cursor:pointer;margin-bottom:2px;color:${h.active ? '#EDEAE4' : '#9C978F'};background:${h.active ? 'rgba(255,255,255,0.05)' : 'transparent'};` }));
+    const chatMessages = s.chatMessages.map(m => ({
+      text: m.text,
+      rowStyle: m.from === 'user' ? 'flex-direction:row-reverse;' : '',
+      avatarStyle: m.from === 'user' ? 'background:#39332B;' : 'background:radial-gradient(circle at 35% 30%, #E8C39B, #C9834F 60%, #5C3A22);',
+    }));
+    const quickPrompts = [
+      '¿Cuál receta tiene mayor margen?',
+      '¿Qué ingrediente subió de precio?',
+      'Optimiza esta receta',
+      'Genera receta de vainilla',
+    ].map(text => ({ text, onClick: () => this.sendChat(text) }));
+
+    return {
+      screenTitle: titles[s.screen],
+      isDashboard: s.screen === 'dashboard', isFormulador: s.screen === 'formulador', isNutrimental: s.screen === 'nutrimental',
+      isInventario: s.screen === 'inventario', isProduccion: s.screen === 'produccion', isVentas: s.screen === 'ventas', isNoriAI: s.screen === 'noriai',
+      navStyleDashboard: navStyle('dashboard'), navStyleFormulador: navStyle('formulador'), navStyleNutrimental: navStyle('nutrimental'),
+      navStyleInventario: navStyle('inventario'), navStyleProduccion: navStyle('produccion'), navStyleVentas: navStyle('ventas'), navStyleNoriAI: navStyle('noriai'),
+      goDashboard: () => this.toggleScreen('dashboard'), goFormulador: () => this.toggleScreen('formulador'), goNutrimental: () => this.toggleScreen('nutrimental'),
+      goInventario: () => this.toggleScreen('inventario'), goProduccion: () => this.toggleScreen('produccion'), goVentas: () => this.toggleScreen('ventas'), goNoriAI: () => this.toggleScreen('noriai'),
+      chartBars, topProducts,
+      recipeRows, ingredientRows, versions: ['V4', 'V3', 'V2', 'V1'],
+      liveCostLote: totalCost.toFixed(2), liveWeight: totalGrams.toFixed(0), liveCostLiter: costPerLiter.toFixed(2), liveCostVaso: costPerVaso.toFixed(2),
+      liveProtein: proteinVaso.toFixed(1), liveCalories: Math.round(caloriesVaso), liveCarbs: carbsVaso.toFixed(1), liveFat: fatVaso.toFixed(1), liveMargin: margin.toFixed(1),
+      nutriPer100, nutriPerVaso, nutriRows, versionCompare,
+      inventoryCards, invFilters, movements,
+      orders, selectedOrder,
+      channels, payMethods, recentOrders,
+      chatHistory, chatMessages, quickPrompts, chatInput: s.chatInput,
+      onChatInputChange: (e) => this.onChatInputChange(e), onChatKeyDown: (e) => this.onChatKeyDown(e), sendChat: () => this.sendChat(),
+      doPrint: () => this.doPrint(), newChat: () => this.newChat(), noop: () => {},
+    };
+  }
+}
+
+</script>
+</body>
+</html>
