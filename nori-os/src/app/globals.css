@@ -1,0 +1,106 @@
+@import "tailwindcss";
+
+:root {
+  --nori-bg: #15181c;
+  --nori-sidebar: #12151a;
+  --nori-card: #1b1f25;
+  --nori-input: #20242b;
+  --nori-photo: #1d2127;
+
+  --nori-border: rgba(255, 255, 255, 0.06);
+  --nori-border-strong: rgba(255, 255, 255, 0.1);
+
+  --nori-text: #edeae4;
+  --nori-text-bright: #e5e1d9;
+  --nori-text-chat: #e2ded6;
+  --nori-text-body: #c7c2b8;
+  --nori-text-muted: #9c978f;
+  --nori-text-dim: #7a756d;
+
+  --nori-terracota: #c9834f;
+  --nori-terracota-light: #e8c39b;
+  --nori-terracota-dark: #5c3a22;
+  --nori-terracota-deep: #241209;
+  --nori-terracota-mid: #8a5e3e;
+
+  --nori-glaciar: #8fa8bc;
+  --nori-amber: #d9a15c;
+  --nori-red: #c1584a;
+  --nori-avatar: #39332b;
+
+  --font-instrument-sans: var(--font-instrument-sans);
+  --font-jetbrains-mono: var(--font-jetbrains-mono);
+}
+
+@theme inline {
+  --color-nori-bg: var(--nori-bg);
+  --color-nori-sidebar: var(--nori-sidebar);
+  --color-nori-card: var(--nori-card);
+  --color-nori-input: var(--nori-input);
+  --color-nori-photo: var(--nori-photo);
+
+  --color-nori-border: var(--nori-border);
+  --color-nori-border-strong: var(--nori-border-strong);
+
+  --color-nori-text: var(--nori-text);
+  --color-nori-text-bright: var(--nori-text-bright);
+  --color-nori-text-chat: var(--nori-text-chat);
+  --color-nori-text-body: var(--nori-text-body);
+  --color-nori-text-muted: var(--nori-text-muted);
+  --color-nori-text-dim: var(--nori-text-dim);
+
+  --color-nori-terracota: var(--nori-terracota);
+  --color-nori-terracota-light: var(--nori-terracota-light);
+  --color-nori-terracota-dark: var(--nori-terracota-dark);
+  --color-nori-terracota-deep: var(--nori-terracota-deep);
+  --color-nori-terracota-mid: var(--nori-terracota-mid);
+
+  --color-nori-glaciar: var(--nori-glaciar);
+  --color-nori-amber: var(--nori-amber);
+  --color-nori-red: var(--nori-red);
+  --color-nori-avatar: var(--nori-avatar);
+
+  --font-sans: var(--font-instrument-sans), system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), monospace;
+}
+
+body {
+  background: var(--nori-bg);
+  color: var(--nori-text);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: rgba(201, 131, 79, 0.25);
+  color: #fff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+input[type="number"]::-webkit-inner-spin-button {
+  opacity: 0;
+}
+
+@media print {
+  #nori-app-shell {
+    display: block !important;
+  }
+  #nori-sidebar,
+  #nori-topbar {
+    display: none !important;
+  }
+}
