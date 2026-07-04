@@ -1,6 +1,6 @@
 # Tarea activa: T-004 — Catálogo real de ingredientes (+ T-005 en cola inmediata)
 
-**Estado: implementadas y verificadas — PENDIENTE aplicar a producción** (conector MCP de Supabase caído; reintentar).
+**Estado: ✅ APLICADAS A PRODUCCIÓN (2026-07-04 06:04 UTC).** Supabase ahora tiene el catálogo (8 ingredientes + 2 packaging) y las metas (3 fases + meta vigente $13,000).
 
 ## Pipeline T-004 (catálogo + packaging)
 | Etapa | Veredicto | Notas |
@@ -11,10 +11,10 @@
 | Reviewer | ✅ | Precios trazados 1:1 al costo unitario del fundador; macros marcados "tabla estándar, pendiente validación". |
 | QA | ✅ | 8 rutas en 200 con fixtures del estado producción; Inventario muestra los 8 ingredientes sin NaN y sin falsos "Stock bajo"; Formulador sigue en estado vacío (esperado: aún no hay recetas de formulador). |
 | Nutrition | ✅ | Recálculo independiente del costo/pinta: $55.61 (cantidades de receta) y $54.46 (cantidades de la tabla del fundador) — dentro del rango declarado $54-58. Alerta T-012 registrada (kcal de alulosa/glicerina). |
-| Deployment | 🟡 | Build+lint limpios; **falta aplicar 0004 a producción** (MCP caído). |
+| Deployment | ✅ | Build+lint limpios; migración aplicada a producción vía MCP. |
 
 ## Pipeline T-005 (metas de venta)
-Igual que T-004: todo ✅ excepto Deployment 🟡 (falta aplicar `0005_metas_de_venta.sql`).
+Igual que T-004: todo ✅ incluido Deployment (0005 aplicada a producción).
 QA: dashboard muestra "Meta mensual de ventas al 0%" contra la meta de $13,000.
 
 ## Discrepancias detectadas (para decisión del usuario — NO resueltas en silencio)

@@ -10,8 +10,8 @@ _Actualizado: 2026-07-04 · por: Orchestrator_
 |---|---|
 | Repo GitHub `saulvaquera08/NORI-OP-` | ✅ sincronizado (`main`) |
 | Supabase "Nori" `ncekuagdxcngefoafzro` | ✅ schema completo (16 tablas + RPC), migraciones versionadas |
-| Datos reales en Supabase | 🟡 solo recetario de marca (5 recetas); catálogo/ventas/producción vacíos |
-| Vercel | ❌ pendiente (T-003) |
+| Datos reales en Supabase | ✅ recetario (5 recetas) + catálogo real (8 ingredientes, precios del fundador) + packaging + metas por fase |
+| Vercel | 🟡 proyecto `nori-op` creado y build OK; falta desactivar Deployment Protection y verificar dominio (T-003) |
 | Auth / roles | ❌ no existe; RLS permisivo deliberado (T-008) |
 
 ## Módulos
