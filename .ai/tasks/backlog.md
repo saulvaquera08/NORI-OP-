@@ -65,3 +65,42 @@ Ordenado por prioridad. Cada tarea nace de la auditoría del 2026-07-04 (código
 **Evidencia:** `recipe-calc.ts` calcula kcal = proteína×4 + carbos×4 + grasas×9 sobre TODOS los carbohidratos. La alulosa (45 g/pinta, no metabolizable, ~0.2-0.4 kcal/g) inflaría las kcal del formulador en ~+170; la glicerina aporta ~4.3 kcal/g. El recetario de marca ya trata la alulosa como no metabolizable (Whynter: 373 kcal con 64 g de carbos).
 **Alcance:** campo `non_metabolizable_carbs_g_100g` (o factor kcal por ingrediente) en `ingredients` + ajuste del cálculo + validación del agente Nutrition.
 **Prioridad:** debe resolverse ANTES de usar el formulador para nutrición con alulosa/glicerina (bloquea T-009).
+
+---
+## Auditoría de mejoras 2026-07-04 (post-Sprint 2, con capturas en scratchpad)
+
+### T-020 · Responsive móvil real — PRIORIDAD ALTA (diseño)
+**Evidencia:** captura a 375px: la sidebar fija de 236px consume el 63% de la pantalla; las tarjetas KPI del dashboard quedan ilegibles (texto encimado en ~35px de ancho cada una). La captura de inventario/ventas ocurrirá desde el celular (cocina/gym).
+**Alcance:** sidebar colapsable (hamburguesa o barra inferior) bajo 768px; grids 4→2→1 columnas; formularios apilados; probar las 7 pantallas a 375px.
+
+### T-021 · Costo y margen REALES con empaque — PRIORIDAD ALTA (funcional)
+**Evidencia:** el panel "En vivo" muestra margen 57.2% usando solo ingredientes ($55.60); el COGS real del fundador incluye pinta+tapa y etiqueta ($15-22 bajo volumen) → margen wholesale real ~43%. La tabla `packaging_items` ya existe en la base y NO se usa en ningún cálculo.
+**Alcance:** sumar empaque (rango bajo volumen) al costo por pinta en Formulador; mostrar "costo con empaque" y "margen real"; misma cifra en Producción (snapshot).
+
+### T-022 · Editar ingrediente (precio/macros/proveedor) — PRIORIDAD ALTA (funcional)
+**Evidencia:** solo hay alta (T-019); los precios cambian (la palanca #1 del negocio es renegociar Isopure/alulosa) y hoy actualizar un precio requiere SQL.
+**Alcance:** editar desde la tarjeta de Inventario; al cambiar precio se recalculan costos en vivo (las órdenes pasadas conservan su snapshot — correcto).
+
+### T-023 · Completar/cancelar orden de producción — PRIORIDAD ALTA (funcional)
+**Evidencia:** las órdenes nacen "en_proceso" y no hay acción para marcarlas completadas; los KPIs del dashboard (producción del mes, costo) SOLO cuentan `completada` → hoy nunca se llenarían.
+**Alcance:** botones "Completar" / "Cancelar" en el detalle de la orden (con rendimiento/merma finales editables al completar).
+
+### T-024 · Correcciones de captura en Ventas — media
+**Evidencia:** no hay forma de corregir una venta mal capturada (borrar/editar). En inventario los errores se corrigen con conteo físico (ya posible).
+**Alcance:** eliminar venta desde "Pedidos recientes" + marcar pagado/pendiente.
+
+### T-025 · Pulido visual menor — media
+- Dashboard: ocultar "↑ 0.0% vs mes anterior" cuando no hay mes previo.
+- Inventario: tarjetas muestran "· lote" colgado cuando lot_code es null (captura); ocultarlo. Badge OK se encima con nombres largos.
+- Ventas: "Pedidos recientes" vacío sin mensaje (dashboard sí lo tiene).
+- Formulador: nombres truncados del catálogo sin tooltip (`title`).
+- Nutrimental: indicar "de los cuales no metabolizables: X g" bajo carbohidratos; comparador de versiones podría mostrar también kcal y costo.
+
+### T-026 · Acciones rápidas en Dashboard — media
+**Evidencia:** el spec original pedía "acciones rápidas"; hoy capturar requiere navegar a cada módulo.
+**Alcance:** 3 botones en el dashboard: Registrar venta · Movimiento de inventario · Nueva orden.
+
+### (Recordatorios ya en backlog, suben de urgencia)
+- **T-008 Auth**: la URL es pública y CUALQUIERA puede editar recetas/costos. Crítico antes de compartir el link al socio o a gyms.
+- **T-007 Export PNG/PDF** de la etiqueta nutrimental (botones "Próximamente").
+- **T-010** queda absorbida por T-020.
