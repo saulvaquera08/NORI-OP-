@@ -9,3 +9,6 @@
 - **Next 16 tiene breaking changes** vs. conocimiento previo del framework: consultar `node_modules/next/dist/docs/` antes de usar APIs dudosas.
 - **El sandbox bloquea egress HTTP a `*.supabase.co` desde procesos locales** (dev server); el MCP sí llega. Para QA de la app usar el mock PostgREST local (`scratchpad/pgrest-empty-mock.js` reproduce PGRST116/maybeSingle) o probar tras el deploy en Vercel.
 - **Verificar la evidencia antes de declarar bug**: "Producción truena con 0 órdenes" resultó falso (ya había guard). El plan se corrige en la etapa Planner, no se arrastra.
+- **Vercel + monorepo:** si el primer import falla por Root Directory, el Framework Preset queda "Other" y NO se re-detecta al corregirlo → builds verdes pero platform NOT_FOUND. Fix permanente: `vercel.json` con `"framework": "nextjs"` en el repo.
+- **Las env vars de Vercel solo aplican en builds nuevos** — redeploy obligatorio tras agregarlas.
+- **No encadenar `pkill` al inicio de comandos compuestos** — el señal-144 aborta todo lo que sigue.

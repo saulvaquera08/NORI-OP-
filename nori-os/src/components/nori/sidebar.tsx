@@ -67,16 +67,8 @@ export function Sidebar() {
         })}
       </nav>
 
-      <div className="mt-auto flex flex-col gap-2">
-        <div className="flex items-center gap-[9px] rounded-[9px] bg-white/[0.03] px-2 py-[9px]">
-          <div className="flex h-[26px] w-[26px] flex-none items-center justify-center rounded-full bg-nori-avatar text-[11px] font-semibold text-[#C7C2B8]">
-            MG
-          </div>
-          <div className="flex flex-col leading-[1.25]">
-            <span className="text-[12.5px] font-semibold">María González</span>
-            <span className="text-[10.5px] text-nori-text-dim">Fundadora</span>
-          </div>
-        </div>
+      <div className="mt-auto px-2 py-[9px] text-[10.5px] tracking-[0.5px] text-nori-text-dim">
+        Uso interno · NORI
       </div>
     </div>
   );

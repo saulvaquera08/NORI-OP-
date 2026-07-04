@@ -13,3 +13,6 @@
 ## 2026-07-04 (pipeline de agentes)
 - T-001 cerrada: pantallas resilientes a base vacía, receta hardcodeada eliminada, EmptyState reutilizable. Las 7 rutas responden 200 contra DB sin datos operativos.
 - T-002 cerrada: pantalla /recetario con las 5 recetas de marca, sellos NOM-051, reglas de formulación y banner de estimados.
+- T-003 cerrada: NORI OS EN PRODUCCIÓN en https://nori-op.vercel.app.
+- T-004/T-005 cerradas: catálogo real y metas aplicados a Supabase producción.
+- T-013 cerrada: eliminado el usuario placeholder del prototipo; footer "Uso interno · NORI". SPRINT 1 CERRADO.

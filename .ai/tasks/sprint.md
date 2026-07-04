@@ -9,3 +9,5 @@
 | T-003 | Deploy a Vercel | pendiente (confirmar cuenta) |
 
 **Fuera del sprint:** T-004/T-005 esperan datos del usuario; se incorporan en cuanto lleguen.
+
+**SPRINT 1 CERRADO (2026-07-04):** T-001 ✅ · T-002 ✅ · T-003 ✅ (+ T-004, T-005, T-013). App en producción: https://nori-op.vercel.app

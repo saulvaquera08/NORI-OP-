@@ -29,3 +29,20 @@
 **Cambios:** ruta `/recetario` + entrada en sidebar con icono propio; tipos de las 4 tablas del recetario en `types.ts`; `getBrandRecipeData()` (selects planos unidos en JS); ficha por receta: badges de máquina/versión/estacional, delta con link a la base, ingredientes con función, proceso numerado, nutrición declarada (nulls omitidos), 5 sellos NOM-051 con valor real y umbral, notas críticas, banner permanente de "valores estimados — pendiente bromatológico"; reglas de formulación al pie de la lista.
 
 **Evidencia QA/Nutrition:** app corrida contra mock PostgREST con fixtures generados desde las MISMAS migraciones que producción; verificación numérica por receta contra `recipe_nutrition` (395/35.2/319/414 Creami · 373/16.1/64 Whynter · 428/38 Chocolate · 400/35 Cajeta · 448/36 Plátano) — todas coinciden; nulls omitidos (Chocolate solo muestra Energía y Proteína); Whynter sin glicerina; banner en las 5; 12 rutas probadas en 200; sin overflow a 375px.
+
+## T-003 · Deploy a Vercel — ✅ 2026-07-04
+
+**Pipeline completo.** Proyecto `nori-op`, dominio **https://nori-op.vercel.app** vivo.
+**Obstáculos resueltos:** (1) Root Directory equivocado en el primer import → 404; (2) Framework Preset quedó "Other" al fallar la detección inicial → builds OK pero platform NOT_FOUND; resuelto con `vercel.json` `"framework": "nextjs"`; (3) Vercel Authentication activa → login wall; desactivada por el usuario; (4) env vars ausentes → SetupRequired; agregadas + redeploy.
+**Evidencia QA:** build logs vía MCP (9 rutas, Next 16); fetch a producción 200 servido por Next.js; migraciones 0004/0005 verificadas en producción; confirmación visual del usuario final. QA HTTP exhaustivo desde sandbox limitado por egress (hosts no permitidos) — opcional agregarlos al allowlist del entorno.
+
+## T-004 · Catálogo real de ingredientes — ✅ 2026-07-04
+## T-005 · Metas de venta por fase — ✅ 2026-07-04
+(Aplicadas y verificadas en producción: 8 ingredientes con precios del fundador, 2 packaging, 3 fases, meta $13,000. Detalle del pipeline en el histórico de current.md / commits ce7c2bf, a5103a6.)
+
+## T-013 · Quitar usuario placeholder del sidebar — ✅ 2026-07-04
+
+**Origen:** pedido del usuario ("María González" era residuo del prototipo; uso interno sin sistema de usuarios — la usarán Saúl y su socio).
+**Cambio:** tarjeta de usuario eliminada de `sidebar.tsx`; pie discreto "Uso interno · NORI".
+**Pipeline:** Developer/Reviewer/QA ✅ (dashboard 200, cero restos del placeholder, footer presente, build+lint limpios) · Nutrition N/A · Deployment ✅ (push → auto-deploy Vercel).
+**Nota del Orchestrator:** con 2 usuarios reales, la prioridad de T-008 (auth/roles) sube — propuesta para el próximo sprint.
