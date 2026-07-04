@@ -21,12 +21,12 @@ Ordenado por prioridad. Cada tarea nace de la auditoría del 2026-07-04 (código
 **Alcance:** conectar repo, configurar `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY`, verificar build en Vercel, documentar URL.
 **Estado:** requiere confirmación del usuario para crear el proyecto en su cuenta Vercel.
 
-### T-004 · Captura del catálogo real de ingredientes
+### T-004 · Captura del catálogo real de ingredientes 🟡 EN CIERRE (migración lista y probada; falta aplicar a producción)
 **Evidencia:** `ingredients` tiene 0 filas; sin catálogo el Formulador no puede operar (y `create_production_order` no tiene qué descontar).
 **Alcance:** insertar los ingredientes reales de NORI (leche descremada LALA, Isopure WPI, alulosa, aceite alto oleico, lecitina, xantana, vainilla Molina, glicerina, cacao natural, plátano…) con precio/kg, macros por 100 g, stock y mínimos reales.
 **Estado:** **BLOQUEADA — requiere datos del usuario** (precios reales, stocks, proveedores). No inventar valores.
 
-### T-005 · Sembrar `company_settings` (meta mensual de ventas)
+### T-005 · Metas de venta 🟡 EN CIERRE (migración lista: 3 fases + meta vigente $13,000; falta aplicar a producción)
 **Evidencia:** tabla vacía; el Dashboard oculta la alerta de meta (guard en `dashboard/page.tsx:116`).
 **Estado:** **BLOQUEADA — requiere dato del usuario** (meta real).
 
@@ -60,3 +60,8 @@ Ordenado por prioridad. Cada tarea nace de la auditoría del 2026-07-04 (código
 ### T-011 · Módulos faltantes del spec original
 **Evidencia:** el spec pide Ingredientes (CRUD), Compras, Finanzas, CRM, Documentos, Configuración; el prototipo aprobado solo cubrió 7 pantallas.
 **Estado:** requiere priorización del usuario, módulo por módulo.
+
+### T-012 · recipe-calc: carbohidratos no metabolizables (NUEVA, detectada en T-004)
+**Evidencia:** `recipe-calc.ts` calcula kcal = proteína×4 + carbos×4 + grasas×9 sobre TODOS los carbohidratos. La alulosa (45 g/pinta, no metabolizable, ~0.2-0.4 kcal/g) inflaría las kcal del formulador en ~+170; la glicerina aporta ~4.3 kcal/g. El recetario de marca ya trata la alulosa como no metabolizable (Whynter: 373 kcal con 64 g de carbos).
+**Alcance:** campo `non_metabolizable_carbs_g_100g` (o factor kcal por ingrediente) en `ingredients` + ajuste del cálculo + validación del agente Nutrition.
+**Prioridad:** debe resolverse ANTES de usar el formulador para nutrición con alulosa/glicerina (bloquea T-009).

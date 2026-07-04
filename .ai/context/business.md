@@ -21,3 +21,9 @@ Hoy: el fundador (Saúl). Futuro: administrador, producción, compras, ventas, c
 
 ## Visión
 Experiencia tipo Linear/Notion/Stripe/Vercel: minimalista, rápida, dark-first. A largo plazo, SaaS vendible a otras marcas de alimentos funcionales.
+
+## Economía unitaria (datos del fundador, 2026-07-04)
+- COGS por pinta: ingredientes ~$54-58 + packaging → **~$70-78 bajo volumen / ~$63-68 a 500+ pzas**.
+- Precios: **wholesale $130/pinta** (margen contribución ~$55-60, ~43%) · retail directo $149-169 (~55-60%).
+- **Isopure = ~40% del COGS.** Palanca #1: WPI a granel 25 kg importado ($600-800/kg vs $1,130 actual) → ahorro ~$8-12/pinta. Ejecutar SOLO tras validar recompra. Palanca #2: alulosa a granel 25 kg (~$150-180/kg vs $250) — pedir cotización a Granel Vital/Pochteca ya.
+- **Capacidad = Ninja Creami:** 1 ciclo/pinta + congelado 24 h → 15-25 pintas/semana, techo ~100/mes. Metas arriba de eso requieren la Whynter (fase Mes 5-6).

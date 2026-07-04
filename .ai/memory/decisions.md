@@ -14,3 +14,6 @@
 - **D-006:** Todo desarrollo pasa por el pipeline de agentes de `.ai/agents/` (Orchestrator → Planner → Developer → Reviewer → QA → Nutrition → Deployment). Una tarea a la vez; ninguna se cierra sin la aprobación de todos.
 - **D-007:** Toda migración se prueba primero en Postgres 16 local y después se aplica vía MCP al proyecto real; repo y DB siempre sincronizados.
 - **D-008 (T-002):** `getBrandRecipeData` usa selects planos por tabla unidos en JS en vez de embedded joins de PostgREST. Razón: tablas diminutas (≤25 filas) y permite QA con fixtures que replican producción sin simular la sintaxis de joins.
+- **D-009 (T-004):** Macros por 100 g del catálogo tomados de tablas estándar (el usuario solo dio precios). Marcados "pendiente validación" en la migración; el formulador no debe usarse para etiquetado hasta validarlos. Stock/mínimos en 0 hasta captura real.
+- **D-010 (T-004):** Los precios usan el costo unitario puntual del fundador (no los rangos de presentación): $1,130/kg Isopure, $28/L leche, $250/kg alulosa, $80/kg aceite, $400/kg lecitina, $350/kg xantana, $130/L vainilla, $130/kg glicerina.
+- **D-011 (T-005):** `company_settings.monthly_sales_goal = $13,000` = techo de la fase actual (100 pintas × $130 wholesale, límite de capacidad de la Creami). Las 3 fases completas viven en `sales_goal_phases`.
