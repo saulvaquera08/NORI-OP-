@@ -29,6 +29,57 @@ export type RecipeRow = {
   id: string;
   name: string;
   created_at: string;
+  slug: string | null;
+  version: string | null;
+  machine: "ninja_creami" | "whynter_icm200ls" | null;
+  base_recipe_id: string | null;
+  description: string | null;
+  process_steps: string[];
+  is_lab_verified: boolean;
+  seasonal: boolean;
+  notes: string | null;
+};
+
+export type RecipeIngredientRow = {
+  id: string;
+  recipe_id: string;
+  ingredient_name: string;
+  quantity_g: number | null;
+  quantity_ml: number | null;
+  quantity_display: string | null;
+  function: string | null;
+  sort_order: number;
+};
+
+export type RecipeNutritionRow = {
+  id: string;
+  recipe_id: string;
+  kcal: number | null;
+  protein_g: number | null;
+  fat_total_g: number | null;
+  fat_saturated_g: number | null;
+  fat_trans_g: number | null;
+  carbs_g: number | null;
+  sugars_g: number | null;
+  added_sugars_g: number | null;
+  sodium_mg: number | null;
+  serving_size_g: number | null;
+};
+
+export type RecipeNom051SealRow = {
+  id: string;
+  recipe_id: string;
+  seal_name: string;
+  threshold: string | null;
+  actual_value: string | null;
+  passes: boolean;
+};
+
+export type FormulationRuleRow = {
+  id: string;
+  sort_order: number;
+  rule: string;
+  rationale: string | null;
 };
 
 export type RecipeVersionRow = {
@@ -129,6 +180,30 @@ export type Database = {
         Row: RecipeRow;
         Insert: Partial<RecipeRow> & { name: string };
         Update: Partial<RecipeRow>;
+        Relationships: Relationships;
+      };
+      recipe_ingredients: {
+        Row: RecipeIngredientRow;
+        Insert: Partial<RecipeIngredientRow> & { recipe_id: string; ingredient_name: string };
+        Update: Partial<RecipeIngredientRow>;
+        Relationships: Relationships;
+      };
+      recipe_nutrition: {
+        Row: RecipeNutritionRow;
+        Insert: Partial<RecipeNutritionRow> & { recipe_id: string };
+        Update: Partial<RecipeNutritionRow>;
+        Relationships: Relationships;
+      };
+      recipe_nom051_seals: {
+        Row: RecipeNom051SealRow;
+        Insert: Partial<RecipeNom051SealRow> & { recipe_id: string; seal_name: string; passes: boolean };
+        Update: Partial<RecipeNom051SealRow>;
+        Relationships: Relationships;
+      };
+      formulation_rules: {
+        Row: FormulationRuleRow;
+        Insert: Partial<FormulationRuleRow> & { sort_order: number; rule: string };
+        Update: Partial<FormulationRuleRow>;
         Relationships: Relationships;
       };
       recipe_versions: {

@@ -9,6 +9,7 @@ const NAV_ITEMS: { href: string; label: string; icon: NavIconName }[] = [
   { href: "/dashboard", label: "Dashboard", icon: "dashboard" },
   { href: "/formulador", label: "Formulador", icon: "formulador" },
   { href: "/nutrimental", label: "Nutrimental", icon: "nutrimental" },
+  { href: "/recetario", label: "Recetario", icon: "recetario" },
   { href: "/inventario", label: "Inventario", icon: "inventario" },
   { href: "/produccion", label: "Producción", icon: "produccion" },
   { href: "/ventas", label: "Ventas", icon: "ventas" },

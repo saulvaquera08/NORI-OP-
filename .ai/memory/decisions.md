@@ -13,3 +13,4 @@
 ## 2026-07-04 — Proceso
 - **D-006:** Todo desarrollo pasa por el pipeline de agentes de `.ai/agents/` (Orchestrator → Planner → Developer → Reviewer → QA → Nutrition → Deployment). Una tarea a la vez; ninguna se cierra sin la aprobación de todos.
 - **D-007:** Toda migración se prueba primero en Postgres 16 local y después se aplica vía MCP al proyecto real; repo y DB siempre sincronizados.
+- **D-008 (T-002):** `getBrandRecipeData` usa selects planos por tabla unidos en JS en vez de embedded joins de PostgREST. Razón: tablas diminutas (≤25 filas) y permite QA con fixtures que replican producción sin simular la sintaxis de joins.

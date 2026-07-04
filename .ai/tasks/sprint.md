@@ -5,7 +5,7 @@
 | # | Tarea | Estado |
 |---|---|---|
 | T-001 | Pantallas resilientes a base vacía + receta no hardcodeada | ✅ completada |
-| T-002 | Pantalla Recetario (recetas de marca NORI) | siguiente |
+| T-002 | Pantalla Recetario (recetas de marca NORI) | ✅ completada |
 | T-003 | Deploy a Vercel | pendiente (confirmar cuenta) |
 
 **Fuera del sprint:** T-004/T-005 esperan datos del usuario; se incorporan en cuanto lleguen.

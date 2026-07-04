@@ -3,7 +3,7 @@
 _Actualizado: 2026-07-04 · por: Orchestrator_
 
 ## Estado general
-🟡 **Funcional en desarrollo, no desplegado.** Build, lint y TypeScript pasan. Las 7 pantallas del prototipo funcionan contra la base real (incluyendo estados vacíos diseñados — T-001 cerrada). El recetario de marca NORI vive en Supabase pero aún sin UI. Sin deploy en Vercel todavía.
+🟡 **Funcional en desarrollo, no desplegado.** Build, lint y TypeScript pasan. Las 7 pantallas del prototipo funcionan contra la base real (incluyendo estados vacíos diseñados — T-001 cerrada). El recetario de marca NORI ya es visible en la app (/recetario, T-002 cerrada). Sin deploy en Vercel todavía.
 
 ## Infraestructura
 | Pieza | Estado |
@@ -24,12 +24,11 @@ _Actualizado: 2026-07-04 · por: Orchestrator_
 | Producción | ✅ | ✅ estado vacío diseñado |
 | Ventas | ✅ | ✅ (vacío) |
 | NORI AI | ✅ UI/persistencia | 🟡 respuestas placeholder, sin LLM (T-006) |
-| Recetario de marca | ❌ sin UI (T-002) | datos ✅ en DB |
+| Recetario de marca | ✅ /recetario | ✅ (5 recetas, sellos, reglas) |
 | Compras / Finanzas / CRM / Documentos / Configuración | ❌ no iniciados (T-011) | — |
 
 ## Pendientes inmediatos
-1. **T-002** (siguiente) — pantalla Recetario de marca.
-2. **T-003** — deploy a Vercel.
+1. **T-003** — deploy a Vercel (esperando confirmación de cuenta).
 
 ## Bloqueadores
 - **T-004** catálogo de ingredientes: esperando precios/stocks/macros reales del usuario.

@@ -2,6 +2,7 @@ export type NavIconName =
   | "dashboard"
   | "formulador"
   | "nutrimental"
+  | "recetario"
   | "inventario"
   | "produccion"
   | "ventas"
@@ -37,6 +38,16 @@ export function NavIcon({ name }: { name: NavIconName }) {
           <span className="h-[2px] rounded-[1px]" style={{ background: "currentColor" }} />
           <span className="h-[2px] w-[70%] rounded-[1px]" style={{ background: "currentColor" }} />
           <span className="h-[2px] w-[85%] rounded-[1px]" style={{ background: "currentColor" }} />
+        </div>
+      );
+    case "recetario":
+      return (
+        <div
+          className="relative flex h-[14px] w-[12px] flex-col justify-center gap-[2px] rounded-[2px] px-[2px]"
+          style={{ border: "1.6px solid currentColor" }}
+        >
+          <span className="h-[1.4px] w-full rounded-[1px] opacity-80" style={{ background: "currentColor" }} />
+          <span className="h-[1.4px] w-[70%] rounded-[1px] opacity-60" style={{ background: "currentColor" }} />
         </div>
       );
     case "inventario":

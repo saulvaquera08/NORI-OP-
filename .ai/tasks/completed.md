@@ -21,3 +21,11 @@
 - La auditoría inicial marcaba crash en Producción con 0 órdenes: FALSO — ya existía guard `selected ?`. Solo se mejoró el branch vacío a EmptyState.
 - `recipe-calc.ts` ya estaba protegido contra división por cero (totalGrams=0).
 - El sandbox bloquea egress a `*.supabase.co` desde procesos locales (el MCP sí funciona) → QA de estados vacíos se hace con mock PostgREST local.
+
+## T-002 · Pantalla "Recetario" (recetas de marca NORI) — ✅ 2026-07-04
+
+**Pipeline:** Orchestrator ✅ → Planner ✅ → Developer ✅ → Reviewer ✅ (1 crítica corregida: faltaba `order()` determinista en sellos) → QA ✅ → Nutrition ✅ → Deployment ✅ (build + lint limpios, sin deps nuevas).
+
+**Cambios:** ruta `/recetario` + entrada en sidebar con icono propio; tipos de las 4 tablas del recetario en `types.ts`; `getBrandRecipeData()` (selects planos unidos en JS); ficha por receta: badges de máquina/versión/estacional, delta con link a la base, ingredientes con función, proceso numerado, nutrición declarada (nulls omitidos), 5 sellos NOM-051 con valor real y umbral, notas críticas, banner permanente de "valores estimados — pendiente bromatológico"; reglas de formulación al pie de la lista.
+
+**Evidencia QA/Nutrition:** app corrida contra mock PostgREST con fixtures generados desde las MISMAS migraciones que producción; verificación numérica por receta contra `recipe_nutrition` (395/35.2/319/414 Creami · 373/16.1/64 Whynter · 428/38 Chocolate · 400/35 Cajeta · 448/36 Plátano) — todas coinciden; nulls omitidos (Chocolate solo muestra Energía y Proteína); Whynter sin glicerina; banner en las 5; 12 rutas probadas en 200; sin overflow a 375px.
