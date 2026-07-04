@@ -10,13 +10,16 @@ El diseño canónico vive en `project/NORI OS - Producto.dc.html` (export de Cla
 4. **Inventario** — tarjetas de stock con filtros (todos/bajo/suficiente), movimientos recientes.
 5. **Producción** — lista de órdenes + detalle (temperatura, rendimiento, merma, operador, fotos, observaciones) + formulario de nueva orden (RPC descuenta inventario).
 6. **Ventas** — KPIs, ingresos por canal, métodos de pago, pedidos recientes.
-7. **NORI AI** — chat con historial persistido. ⚠️ Respuestas actuales: placeholder aleatorio (sin LLM real).
+7. ~~NORI AI~~ — ELIMINADO (T-014). Decisión del fundador: la app es una herramienta de control operativo, sin IA.
 
 ## Módulos del spec original AÚN NO implementados
 Ingredientes (CRUD del catálogo), Compras, Finanzas, CRM, Documentos, Configuración, permisos por usuario. El prototipo aprobado cubría solo las 7 pantallas de arriba.
 
 ## Recetario de marca (en DB, sin UI todavía)
 Las 5 recetas NORI (Base V6 Creami/Whynter + Chocolate/Cajeta/Plátano) viven en Supabase con ingredientes declarados, proceso, nutrición estimada y sellos. Ninguna pantalla las muestra aún.
+
+## Norte del producto (fundador, 2026-07-04)
+Lo más importante, en orden: (1) apuntar variaciones de recetas y que la tabla nutrimental se genere sola al ingresarlas; (2) apuntar el inventario actual; (3) apuntar las ventas; (4) registrar qué se produjo y con qué receta. Reemplazar las hojas de Excel: saber qué entró, qué salió, cómo y cuándo, todo en un solo lugar. NADA de chats de IA.
 
 ## Principios de producto
 - Todo conectado: un movimiento afecta al resto del sistema.

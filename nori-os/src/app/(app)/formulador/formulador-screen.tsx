@@ -165,32 +165,6 @@ export function FormuladorScreen({
           })}
         </div>
 
-        {editable && (
-          <div className="mt-6 rounded-xl border border-nori-terracota/20 bg-nori-terracota/5 p-4">
-            <div className="flex items-start gap-[9px]">
-              <div
-                className="mt-[1px] h-5 w-5 flex-none rounded-full"
-                style={{ background: "radial-gradient(circle at 35% 30%, #E8C39B, #C9834F 60%, #5C3A22)" }}
-              />
-              <div>
-                <div className="mb-1 text-[12.5px] font-semibold text-nori-terracota">NORI AI sugiere</div>
-                <div className="text-[13px] leading-relaxed text-nori-text-body">
-                  Si reemplazas el eritritol por alulosa, el costo aumenta{" "}
-                  <b className="text-nori-text">$0.84 por vaso</b> pero mejora la textura un{" "}
-                  <b className="text-nori-text">12%</b>.
-                </div>
-                <div className="mt-[10px] flex gap-2">
-                  <Link
-                    href="/nori-ai"
-                    className="cursor-pointer rounded-[7px] bg-nori-terracota px-3 py-[6px] text-xs font-semibold text-nori-terracota-deep"
-                  >
-                    Preguntar a NORI AI
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
 
       {/* ---- live panel ---- */}

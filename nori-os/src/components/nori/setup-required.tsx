@@ -20,7 +20,7 @@ export function SetupRequired() {
         <h1 className="mb-2 text-lg font-semibold">Falta conectar Supabase</h1>
         <p className="mb-4 text-[13.5px] leading-relaxed text-nori-text-body">
           NORI OS necesita un proyecto de Supabase para guardar ingredientes, recetas,
-          inventario, producción, ventas y las conversaciones de NORI AI.
+          inventario, producción y ventas.
         </p>
         <ol className="mb-4 list-decimal space-y-2 pl-5 text-[13px] leading-relaxed text-nori-text-body">
           <li>

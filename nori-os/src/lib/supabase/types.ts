@@ -146,20 +146,6 @@ export type SalesOrderRow = {
   created_at: string;
 };
 
-export type ChatConversationRow = {
-  id: string;
-  title: string;
-  created_at: string;
-};
-
-export type ChatMessageRow = {
-  id: string;
-  conversation_id: string;
-  role: "user" | "assistant";
-  content: string;
-  created_at: string;
-};
-
 export type CompanySettingsRow = {
   id: boolean;
   monthly_sales_goal: number;
@@ -254,22 +240,6 @@ export type Database = {
           payment_method: SalesOrderRow["payment_method"];
         };
         Update: Partial<Omit<SalesOrderRow, "amount">>;
-        Relationships: Relationships;
-      };
-      chat_conversations: {
-        Row: ChatConversationRow;
-        Insert: Partial<ChatConversationRow>;
-        Update: Partial<ChatConversationRow>;
-        Relationships: Relationships;
-      };
-      chat_messages: {
-        Row: ChatMessageRow;
-        Insert: Partial<ChatMessageRow> & {
-          conversation_id: string;
-          role: ChatMessageRow["role"];
-          content: string;
-        };
-        Update: Partial<ChatMessageRow>;
         Relationships: Relationships;
       };
       company_settings: {

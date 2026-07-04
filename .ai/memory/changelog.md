@@ -16,3 +16,7 @@
 - T-003 cerrada: NORI OS EN PRODUCCIÓN en https://nori-op.vercel.app.
 - T-004/T-005 cerradas: catálogo real y metas aplicados a Supabase producción.
 - T-013 cerrada: eliminado el usuario placeholder del prototipo; footer "Uso interno · NORI". SPRINT 1 CERRADO.
+
+## Sprint 2 (2026-07-04)
+- Dirección del fundador registrada: control operativo, cero IA. Backlog reordenado.
+- T-014: módulo NORI AI eliminado (ruta, sidebar, topbar ⌘K, caja "sugiere" del formulador, actions, tipos, token CSS, migración 0006 drop de tablas de chat). Bonus: título "Recetario" faltante en topbar corregido.

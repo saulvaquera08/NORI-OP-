@@ -12,7 +12,6 @@
 
   --nori-text: #edeae4;
   --nori-text-bright: #e5e1d9;
-  --nori-text-chat: #e2ded6;
   --nori-text-body: #c7c2b8;
   --nori-text-muted: #9c978f;
   --nori-text-dim: #7a756d;
@@ -44,7 +43,6 @@
 
   --color-nori-text: var(--nori-text);
   --color-nori-text-bright: var(--nori-text-bright);
-  --color-nori-text-chat: var(--nori-text-chat);
   --color-nori-text-body: var(--nori-text-body);
   --color-nori-text-muted: var(--nori-text-muted);
   --color-nori-text-dim: var(--nori-text-dim);

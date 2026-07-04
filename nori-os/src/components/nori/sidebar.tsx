@@ -13,7 +13,6 @@ const NAV_ITEMS: { href: string; label: string; icon: NavIconName }[] = [
   { href: "/inventario", label: "Inventario", icon: "inventario" },
   { href: "/produccion", label: "Producción", icon: "produccion" },
   { href: "/ventas", label: "Ventas", icon: "ventas" },
-  { href: "/nori-ai", label: "NORI AI", icon: "noriai" },
 ];
 
 export function Sidebar() {

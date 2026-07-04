@@ -32,7 +32,7 @@ Ordenado por prioridad. Cada tarea nace de la auditoría del 2026-07-04 (código
 
 ## P2 — Deuda y features del spec
 
-### T-006 · NORI AI real ⏸ EN PAUSA (decisión del usuario 2026-07-04: sin IA en la app por ahora)
+### T-006 · NORI AI real ❌ CANCELADA (decisión firme del usuario: la app es control operativo, sin IA; módulo eliminado en T-014)
 **Evidencia:** `actions.ts:77-82` responde con 4 frases aleatorias hardcodeadas.
 **Alcance:** conectar un LLM con contexto del negocio (recetas, inventario, ventas desde Supabase). Requiere decidir proveedor y API key.
 **Estado:** requiere decisión del usuario (proveedor/costo).

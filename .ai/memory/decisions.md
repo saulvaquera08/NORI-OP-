@@ -17,3 +17,4 @@
 - **D-009 (T-004):** Macros por 100 g del catálogo tomados de tablas estándar (el usuario solo dio precios). Marcados "pendiente validación" en la migración; el formulador no debe usarse para etiquetado hasta validarlos. Stock/mínimos en 0 hasta captura real.
 - **D-010 (T-004):** Los precios usan el costo unitario puntual del fundador (no los rangos de presentación): $1,130/kg Isopure, $28/L leche, $250/kg alulosa, $80/kg aceite, $400/kg lecitina, $350/kg xantana, $130/L vainilla, $130/kg glicerina.
 - **D-011 (T-005):** `company_settings.monthly_sales_goal = $13,000` = techo de la fase actual (100 pintas × $130 wholesale, límite de capacidad de la Creami). Las 3 fases completas viven en `sales_goal_phases`.
+- **D-012 (2026-07-04):** NORI AI eliminado del producto (UI, actions, tablas). El fundador definió el norte: control operativo tipo "adiós Excel" — recetas con nutrición automática, inventario, ventas y producción. T-006 cancelada definitivamente.

@@ -5,8 +5,7 @@ export type NavIconName =
   | "recetario"
   | "inventario"
   | "produccion"
-  | "ventas"
-  | "noriai";
+  | "ventas";
 
 export function NavIcon({ name }: { name: NavIconName }) {
   switch (name) {
@@ -80,16 +79,6 @@ export function NavIcon({ name }: { name: NavIconName }) {
           <span className="w-[3px] rounded-[1px] opacity-80" style={{ height: 9, background: "currentColor" }} />
           <span className="w-[3px] rounded-[1px]" style={{ height: 13, background: "currentColor" }} />
         </div>
-      );
-    case "noriai":
-      return (
-        <div
-          className="h-[13px] w-[13px] rounded-full"
-          style={{
-            background:
-              "radial-gradient(circle at 35% 30%, #E8C39B, #C9834F 60%, #5C3A22)",
-          }}
-        />
       );
   }
 }
