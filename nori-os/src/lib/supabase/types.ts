@@ -14,6 +14,7 @@ export type IngredientRow = {
   fiber_g_100g: number;
   sodium_mg_100g: number;
   sugar_g_100g: number;
+  non_metabolizable_carbs_g_100g: number;
   allergens: string[];
   shelf_life_days: number | null;
   stock: number;
@@ -251,6 +252,23 @@ export type Database = {
     };
     Views: Record<string, never>;
     Functions: {
+      register_inventory_movement: {
+        Args: {
+          p_ingredient_id: string;
+          p_type: "entrada" | "salida";
+          p_quantity: number;
+          p_note: string | null;
+        };
+        Returns: undefined;
+      };
+      set_stock_count: {
+        Args: {
+          p_ingredient_id: string;
+          p_new_stock: number;
+          p_note: string | null;
+        };
+        Returns: undefined;
+      };
       create_production_order: {
         Args: {
           p_recipe_version_id: string;

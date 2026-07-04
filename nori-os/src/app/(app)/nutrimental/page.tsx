@@ -50,7 +50,8 @@ export default async function NutrimentalPage() {
   }
 
   const vigenteRows = rowsByVersion.get(vigente.id) ?? [];
-  const calc = computeRecipeCalc(vigenteRows, Number(vigente.sell_price));
+  const servingMl = Number(vigente.serving_size_ml) || 475;
+  const calc = computeRecipeCalc(vigenteRows, Number(vigente.sell_price), servingMl);
   const seals = computeNomSeals(calc);
 
   const nutriRows = [
@@ -67,7 +68,7 @@ export default async function NutrimentalPage() {
     .sort((a, b) => a.version_number - b.version_number)
     .map((v) => {
       const rows = rowsByVersion.get(v.id) ?? [];
-      const c = computeRecipeCalc(rows, Number(v.sell_price));
+      const c = computeRecipeCalc(rows, Number(v.sell_price), Number(v.serving_size_ml) || 475);
       return { label: `V${v.version_number}`, protein: c.proteinVaso };
     });
 
@@ -78,11 +79,11 @@ export default async function NutrimentalPage() {
           Información Nutrimental
         </div>
         <div className="mb-[10px] text-[11px] text-[#444]">
-          Tamaño de la porción: 1 vaso (240 mL) — Porciones por envase: 1
+          Tamaño de la porción: 1 pinta ({servingMl} mL) — Porciones por envase: 1
         </div>
         <div className="mb-1 flex justify-between border-b border-[#15181C] pb-1 text-[11px] text-[#444]">
           <span>Por 100 g</span>
-          <span>Por vaso</span>
+          <span>Por porción</span>
         </div>
         <div className="mb-[6px] border-b-[6px] border-[#15181C] pb-[6px]">
           <div className="flex items-baseline justify-between gap-3 text-sm font-bold leading-[1.3]">

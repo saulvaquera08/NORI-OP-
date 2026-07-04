@@ -1,38 +1,21 @@
-# Tarea activa: T-018 — Variaciones de recetas + tabla nutrimental automática
+# Tarea activa: Sprint 2 en cierre — T-018 + T-015 + T-016 implementadas
 
-**Prioridad:** #1 del fundador ("lo más importante") · **Sprint:** 2 · **Estado:** plan listo, implementación por iniciar.
+**Estado: código completo, verificado y en `main` (auto-deploy Vercel). PENDIENTE: aplicar migraciones 0006-0009 a Supabase producción (conector MCP caído — sin ellas las pantallas nuevas mostrarán estados vacíos/errores de columna).**
 
-## Pipeline
+## Pipeline conjunto (T-018 variaciones+nutrimental · T-015 inventario · T-016 ventas · T-017 desbloqueada)
 | Etapa | Veredicto | Notas |
 |---|---|---|
-| Orchestrator | ✅ asignada | Encabeza el Sprint 2. Absorbe T-012 (prerequisito matemático). |
-| Planner | ✅ plan listo | Verificado contra código: recipe-calc usa constante VASO_ML=240; el formulador edita la versión vigente EN SITIO (no hay "guardar como nueva versión"); recipe_versions está vacía en producción. |
-| Developer | ⏳ | |
-| Reviewer | ⏳ | |
-| QA | ⏳ | |
-| Nutrition | ⏳ | |
-| Deployment | ⏳ | |
+| Orchestrator | ✅ | Las 3 tareas de captura se implementaron juntas por el reporte de fallas del fundador (todas eran "falta el formulario"). |
+| Planner | ✅ | Plan T-018 + extensión de captura. |
+| Developer | ✅ | Migraciones 0007 (carbos no metabolizables), 0008 (Base V6 al formulador), 0009 (canales + RPCs inventario); recipe-calc porción parametrizada; guardar-como-nueva-versión; nueva receta; forms inventario (conteo/entrada/salida/mínimo) y ventas. |
+| Reviewer | ✅ | 1 crítica corregida en el camino: conflicto de unique(name) en canales → `on conflict (name)`. saveAsNewVersion sin transacción DB (secuencial con rollback manual del estado vigente) — aceptado para uso interno, anotado. |
+| QA | ✅ | 7 rutas en 200 con fixtures con joins embebidos; formulador muestra Base V6 con botón "Guardar como V7"; forms presentes; producción ya ofrece la receta. Mutaciones de RPC probadas en Postgres local (entrada +3, conteo=40, salida −1 ✅). Límite: guardado de versión/ventas solo verificable en producción (mock read-only) — verificar con el usuario tras el deploy. |
+| Nutrition | ✅ | **kcal 361/pinta y 89 kcal/100 g SIN contar alulosa** (contándola: ~541 — el bug T-012 queda resuelto). Proteína 34.2 g y costo $55.60 vs declarados 35.2 g/$54-58: deltas explicados por la discrepancia leche 300 vs 380 ml YA reportada al fundador. Sello de grasas relabeled "conservador" (el catálogo no distingue saturadas — honesto). |
+| Deployment | 🟡 | Build+lint limpios; push a main hecho. **Falta aplicar 0006/0007/0008/0009 a producción.** |
 
-## Plan (Planner)
-
-**Objetivo:** que Saúl pueda abrir la Base V6 en el Formulador, ajustar gramos, guardar el ajuste como **nueva versión inmutable** (V7, V8… — nunca se borra nada) y que la **Tabla Nutrimental se genere sola** para la versión vigente, con kcal correctas para alulosa.
-
-### Pasos
-1. **Migración 0007** (T-012): columna `ingredients.non_metabolizable_carbs_g_100g` (default 0); alulosa = 100. Ajustar `recipe-calc.ts`: kcal = proteína×4 + (carbos − no_metab)×4 + grasas×9 (glicerina se queda a 4 kcal/g: error ≤2 kcal por pinta, aceptado).
-2. **Migración 0008:** sembrar la Base V6 Simple · Ninja Creami como versión de formulador: `recipe_versions` V6 `vigente` (recipe f0…01, sell_price $130 wholesale, serving_size_ml 475 = pinta) + sus 8 `recipe_version_ingredients` desde el catálogo real (leche 300 g≈300 ml y vainilla 10 g≈10 ml — aproximación densidad≈1, registrar en decisions).
-3. **recipe-calc:** parametrizar tamaño de porción (usar `serving_size_ml` de la versión en lugar de la constante 240) — la etiqueta será "por pinta", consistente con el producto real.
-4. **Acción "Guardar como nueva versión":** duplica las filas de la versión vigente → version_number+1 con los gramos actuales, nueva = `vigente`, anterior = `archivada`. Nunca borra versiones.
-5. **Nutrimental:** ya se genera de la vigente — verificar números con porción de 475 ml y agregar el banner explícito "estimado — pendiente bromatológico".
-
-### Criterios de aceptación
-- A1: Formulador muestra Base V6 con los 8 ingredientes reales y costo/pinta ≈ $55.61 (verificación Nutrition previa).
-- A2: kcal por pinta SIN contar alulosa ≈ valores declarados del recetario (~390-400 con 300 ml de leche) — no los ~570 que saldrían contando alulosa a 4 kcal/g.
-- A3: "Guardar como nueva versión" crea V7 vigente, V6 pasa a archivada, ambas consultables; la nutrimental refleja V7.
-- A4: Producción puede crear una orden contra la V6/V7 y descuenta inventario (cierra el ciclo: producir → receta usada → inventario).
-- A5: Build/lint limpios; migraciones probadas local → producción.
-
-### Fuera de alcance
-Captura de inventario (T-015) y ventas (T-016) — siguientes del sprint; export PNG/PDF (T-007).
-
-## Pendiente de infraestructura
-- Aplicar `0006_drop_ai_chat.sql` a producción cuando regrese el conector de Supabase (tablas vacías, sin urgencia).
+## Al aplicar las migraciones, verificar en producción con el usuario:
+1. Formulador: Base V6 visible, editar gramos, "Guardar como V7".
+2. Nutrimental: etiqueta por pinta 475 ml.
+3. Inventario: conteo físico de un ingrediente real.
+4. Ventas: registrar una venta de prueba.
+5. Producción: crear una orden (descuenta inventario).

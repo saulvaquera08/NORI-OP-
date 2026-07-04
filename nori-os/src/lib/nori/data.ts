@@ -49,14 +49,37 @@ export function toIngredientNutrition(i: IngredientRow): IngredientNutrition {
   return {
     id: i.id,
     name: i.name,
-    pricePerKg: i.price_per_kg,
-    proteinG100g: i.protein_g_100g,
-    carbsG100g: i.carbs_g_100g,
-    fatG100g: i.fat_g_100g,
-    fiberG100g: i.fiber_g_100g,
-    sodiumMg100g: i.sodium_mg_100g,
-    sugarG100g: i.sugar_g_100g,
+    pricePerKg: Number(i.price_per_kg),
+    proteinG100g: Number(i.protein_g_100g),
+    carbsG100g: Number(i.carbs_g_100g),
+    fatG100g: Number(i.fat_g_100g),
+    fiberG100g: Number(i.fiber_g_100g),
+    sodiumMg100g: Number(i.sodium_mg_100g),
+    sugarG100g: Number(i.sugar_g_100g),
+    nonMetabCarbsG100g: Number(i.non_metabolizable_carbs_g_100g ?? 0),
   };
+}
+
+// All recipes that have formulador versions, grouped, oldest first.
+export async function getFormuladorRecipes(supabase: Client) {
+  const { data, error } = await supabase
+    .from("recipe_versions")
+    .select("*, recipe:recipes(id, name)")
+    .order("created_at", { ascending: true });
+  if (error) throw error;
+
+  const byRecipe = new Map<string, { recipe: { id: string; name: string }; versions: typeof data }>();
+  for (const v of data ?? []) {
+    const recipe = v.recipe as unknown as { id: string; name: string } | null;
+    if (!recipe) continue;
+    const entry = byRecipe.get(recipe.id) ?? { recipe, versions: [] };
+    entry.versions.push(v);
+    byRecipe.set(recipe.id, entry);
+  }
+  return [...byRecipe.values()].map((e) => ({
+    recipe: e.recipe,
+    versions: e.versions.slice().sort((a, b) => b.version_number - a.version_number),
+  }));
 }
 
 export async function getIngredientCatalog(supabase: Client) {

@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { formatMoney } from "@/lib/nori/format";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { SetupRequired } from "@/components/nori/setup-required";
+import { NuevaVentaForm } from "@/app/(app)/ventas/nueva-venta-form";
 
 export const dynamic = "force-dynamic";
 
@@ -84,6 +85,10 @@ export default async function VentasPage() {
 
   return (
     <div className="p-7">
+      <NuevaVentaForm
+        channels={channels.map((c) => ({ id: c.id, name: c.name }))}
+        products={["Vainilla", "Chocolate", "Cajeta", "Plátano", "Cookies & Cream"]}
+      />
       <div className="mb-[14px] grid grid-cols-4 gap-[14px]">
         <div className="rounded-[14px] border border-nori-border bg-nori-card p-[18px]">
           <div className="mb-2 text-xs text-nori-text-muted">Ingresos del mes</div>

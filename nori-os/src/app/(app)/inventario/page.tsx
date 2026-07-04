@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { formatShortDate } from "@/lib/nori/format";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { SetupRequired } from "@/components/nori/setup-required";
+import { InventarioForms } from "@/app/(app)/inventario/inventario-forms";
 
 export const dynamic = "force-dynamic";
 
@@ -48,6 +49,15 @@ export default async function InventarioPage({
 
   return (
     <div className="p-7">
+      <InventarioForms
+        ingredients={ingredients.map((i) => ({
+          id: i.id,
+          name: i.name,
+          unit: i.unit,
+          stock: Number(i.stock),
+          stockMin: Number(i.stock_min),
+        }))}
+      />
       <div className="mb-5 flex gap-[10px]">
         {FILTERS.map((flt) => (
           <Link

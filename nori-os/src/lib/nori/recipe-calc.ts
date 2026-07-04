@@ -8,6 +8,8 @@ export type IngredientNutrition = {
   fiberG100g: number;
   sodiumMg100g: number;
   sugarG100g: number;
+  // Fracción de los carbohidratos que no aporta energía (p. ej. alulosa).
+  nonMetabCarbsG100g: number;
 };
 
 export type RecipeRowInput = {
@@ -15,18 +17,24 @@ export type RecipeRowInput = {
   grams: number;
 };
 
-const VASO_ML = 240;
-const DEFAULT_SELL_PRICE = 89;
+// Porción por defecto: pinta NORI (475 ml).
+const DEFAULT_SERVING_ML = 475;
+const DEFAULT_SELL_PRICE = 130;
 
-export function computeRecipeCalc(rows: RecipeRowInput[], sellPrice = DEFAULT_SELL_PRICE) {
+export function computeRecipeCalc(
+  rows: RecipeRowInput[],
+  sellPrice = DEFAULT_SELL_PRICE,
+  servingMl = DEFAULT_SERVING_ML
+) {
   const totalGrams = rows.reduce((a, r) => a + r.grams, 0) || 0;
   const totalCost = rows.reduce((a, r) => a + (r.grams * r.ingredient.pricePerKg) / 1000, 0);
 
-  const totals = { protein: 0, carbs: 0, fat: 0, fiber: 0, sodium: 0, sugar: 0 };
+  const totals = { protein: 0, carbs: 0, metabCarbs: 0, fat: 0, fiber: 0, sodium: 0, sugar: 0 };
   for (const r of rows) {
     const f = r.grams / 100;
     totals.protein += f * r.ingredient.proteinG100g;
     totals.carbs += f * r.ingredient.carbsG100g;
+    totals.metabCarbs += f * Math.max(0, r.ingredient.carbsG100g - r.ingredient.nonMetabCarbsG100g);
     totals.fat += f * r.ingredient.fatG100g;
     totals.fiber += f * r.ingredient.fiberG100g;
     totals.sodium += f * r.ingredient.sodiumMg100g;
@@ -35,21 +43,25 @@ export function computeRecipeCalc(rows: RecipeRowInput[], sellPrice = DEFAULT_SE
 
   const volumeMl = totalGrams / 1.05;
   const liters = volumeMl / 1000;
-  const vasos = Math.max(1, Math.floor(volumeMl / VASO_ML));
+  const porciones = Math.max(1, Math.floor(volumeMl / servingMl));
 
   const costPerLiter = totalCost / (liters || 1);
-  const costPerVaso = totalCost / vasos;
+  const costPerVaso = totalCost / porciones;
 
-  const proteinVaso = totals.protein / vasos;
-  const carbsVaso = totals.carbs / vasos;
-  const fatVaso = totals.fat / vasos;
-  const fiberVaso = totals.fiber / vasos;
-  const sodiumVaso = totals.sodium / vasos;
-  const sugarVaso = totals.sugar / vasos;
-  const caloriesVaso = proteinVaso * 4 + carbsVaso * 4 + fatVaso * 9;
+  const proteinVaso = totals.protein / porciones;
+  const carbsVaso = totals.carbs / porciones;
+  const fatVaso = totals.fat / porciones;
+  const fiberVaso = totals.fiber / porciones;
+  const sodiumVaso = totals.sodium / porciones;
+  const sugarVaso = totals.sugar / porciones;
+  // kcal solo sobre carbohidratos metabolizables (la alulosa no cuenta).
+  const caloriesVaso = (totals.protein * 4 + totals.metabCarbs * 4 + totals.fat * 9) / porciones;
 
   const per100g = (v: number) => (totalGrams > 0 ? (v / totalGrams) * 100 : 0);
-  const kcalPer100g = totalGrams > 0 ? ((totals.protein * 4 + totals.carbs * 4 + totals.fat * 9) / totalGrams) * 100 : 0;
+  const kcalPer100g =
+    totalGrams > 0
+      ? ((totals.protein * 4 + totals.metabCarbs * 4 + totals.fat * 9) / totalGrams) * 100
+      : 0;
 
   const margin = sellPrice > 0 ? ((sellPrice - costPerVaso) / sellPrice) * 100 : 0;
 
@@ -59,7 +71,8 @@ export function computeRecipeCalc(rows: RecipeRowInput[], sellPrice = DEFAULT_SE
     totals,
     volumeMl,
     liters,
-    vasos,
+    vasos: porciones,
+    servingMl,
     costPerLiter,
     costPerVaso,
     proteinVaso,
@@ -78,8 +91,10 @@ export function computeRecipeCalc(rows: RecipeRowInput[], sellPrice = DEFAULT_SE
 
 export type NomSeal = { label: string; status: "ok" | "warning" | "exceso" };
 
-// Simplified NOM-051 heuristic (solid-food thresholds, per 100g). Real
-// compliance requires lab validation — surfaced explicitly in the UI.
+// Heurística NOM-051 simplificada (umbrales de sólidos, por 100 g). El
+// cumplimiento real requiere validación de laboratorio — la UI lo indica.
+// Nota: el catálogo no distingue grasa saturada; se compara la grasa TOTAL
+// contra el umbral de saturadas (conservador: sobre-alerta, nunca sub-alerta).
 export function computeNomSeals(calc: ReturnType<typeof computeRecipeCalc>): NomSeal[] {
   const seals: NomSeal[] = [];
 
@@ -102,9 +117,9 @@ export function computeNomSeals(calc: ReturnType<typeof computeRecipeCalc>): Nom
 
   const fatPer100 = calc.per100g(calc.totals.fat);
   if (fatPer100 > 4) {
-    seals.push({ label: "Exceso de grasas saturadas", status: "exceso" });
+    seals.push({ label: "Grasa total sobre umbral de saturadas (conservador)", status: "warning" });
   } else if (fatPer100 > 3) {
-    seals.push({ label: "Grasas saturadas cerca del límite", status: "warning" });
+    seals.push({ label: "Grasas cerca del límite (conservador)", status: "warning" });
   } else {
     seals.push({ label: "Sin exceso de grasas saturadas", status: "ok" });
   }

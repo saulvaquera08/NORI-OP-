@@ -1,67 +1,69 @@
 import { createClient } from "@/lib/supabase/server";
 import {
+  getFormuladorRecipes,
   getIngredientCatalog,
-  getPrimaryFormuladorRecipe,
   getRecipeVersionRows,
+  toIngredientNutrition,
 } from "@/lib/nori/data";
 import { FormuladorScreen } from "@/app/(app)/formulador/formulador-screen";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { SetupRequired } from "@/components/nori/setup-required";
 import { EmptyState } from "@/components/nori/empty-state";
+import { NuevaRecetaForm } from "@/app/(app)/formulador/nueva-receta-form";
 
 export const dynamic = "force-dynamic";
 
 export default async function FormuladorPage({
   searchParams,
 }: {
-  searchParams: Promise<{ v?: string }>;
+  searchParams: Promise<{ rec?: string; v?: string }>;
 }) {
   if (!isSupabaseConfigured()) return <SetupRequired />;
-  const { v } = await searchParams;
+  const { rec, v } = await searchParams;
   const supabase = await createClient();
 
-  const primary = await getPrimaryFormuladorRecipe(supabase);
-  if (!primary) {
+  const [recipeGroups, catalogRows] = await Promise.all([
+    getFormuladorRecipes(supabase),
+    getIngredientCatalog(supabase),
+  ]);
+  const catalog = catalogRows.map(toIngredientNutrition);
+
+  if (recipeGroups.length === 0) {
     return (
-      <EmptyState
-        title="Aún no hay recetas en el formulador"
-        description="El formulador trabaja con recetas versionadas y el catálogo de ingredientes (precios y macros por 100 g). Cuando exista al menos una receta con versiones, aparecerá aquí para editarla gramo a gramo."
-        hint="Siguiente paso: capturar el catálogo real de ingredientes (T-004 del backlog)."
-      />
+      <div className="flex h-full flex-col">
+        <div className="border-b border-nori-border p-6">
+          <NuevaRecetaForm />
+        </div>
+        <EmptyState
+          title="Aún no hay recetas en el formulador"
+          description="Crea tu primera receta con el botón de arriba. Podrás armarla con los ingredientes del catálogo, ver costo y nutrición en vivo, y guardar cada ajuste como una nueva versión inmutable."
+        />
+      </div>
     );
   }
-  const { recipe, versions } = primary;
 
+  const group = (rec ? recipeGroups.find((g) => g.recipe.id === rec) : null) ?? recipeGroups[0];
+  const versions = group.versions;
   const selected =
     (v ? versions.find((ver) => String(ver.version_number) === v) : null) ??
     versions.find((ver) => ver.status === "vigente") ??
     versions[0];
 
-  const [rows, catalog] = await Promise.all([
-    getRecipeVersionRows(supabase, selected.id),
-    getIngredientCatalog(supabase),
-  ]);
+  const rows = await getRecipeVersionRows(supabase, selected.id);
 
   return (
     <FormuladorScreen
-      recipeName={recipe.name}
+      recipes={recipeGroups.map((g) => g.recipe)}
+      recipeId={group.recipe.id}
+      recipeName={group.recipe.name}
       versions={versions.map((ver) => ({ id: ver.id, versionNumber: ver.version_number, status: ver.status }))}
       selectedVersionId={selected.id}
       selectedVersionNumber={selected.version_number}
       selectedStatus={selected.status}
       sellPrice={Number(selected.sell_price)}
+      servingMl={Number(selected.serving_size_ml)}
       initialRows={rows.map((r) => ({ ingredient: r.ingredient, grams: r.grams }))}
-      catalog={catalog.map((i) => ({
-        id: i.id,
-        name: i.name,
-        pricePerKg: Number(i.price_per_kg),
-        proteinG100g: Number(i.protein_g_100g),
-        carbsG100g: Number(i.carbs_g_100g),
-        fatG100g: Number(i.fat_g_100g),
-        fiberG100g: Number(i.fiber_g_100g),
-        sodiumMg100g: Number(i.sodium_mg_100g),
-        sugarG100g: Number(i.sugar_g_100g),
-      }))}
+      catalog={catalog}
     />
   );
 }
