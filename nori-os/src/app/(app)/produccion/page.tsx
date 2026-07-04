@@ -4,6 +4,7 @@ import { formatShortDate } from "@/lib/nori/format";
 import { NuevaOrdenForm } from "@/app/(app)/produccion/nueva-orden-form";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { SetupRequired } from "@/components/nori/setup-required";
+import { EmptyState } from "@/components/nori/empty-state";
 
 export const dynamic = "force-dynamic";
 
@@ -72,7 +73,13 @@ export default async function ProduccionPage({
         <div className="mb-3 text-[11px] uppercase tracking-[0.5px] text-nori-text-dim">
           Órdenes de producción
         </div>
-        <NuevaOrdenForm recipeOptions={recipeOptions} />
+        {recipeOptions.length > 0 ? (
+          <NuevaOrdenForm recipeOptions={recipeOptions} />
+        ) : (
+          <div className="mb-3 rounded-[9px] border border-nori-border bg-nori-card p-3 text-[11.5px] leading-relaxed text-nori-text-dim">
+            Para crear órdenes se necesita al menos una receta con versiones en el formulador.
+          </div>
+        )}
         {orders.map((ord) => (
           <Link
             key={ord.id}
@@ -165,7 +172,11 @@ export default async function ProduccionPage({
             </div>
           </>
         ) : (
-          <div className="text-[13px] text-nori-text-dim">No hay órdenes de producción todavía.</div>
+          <EmptyState
+            title="Sin órdenes de producción"
+            description="Cuando registres tu primer lote aparecerá aquí con su temperatura, rendimiento, merma y observaciones. Cada orden descuenta automáticamente el inventario de ingredientes."
+            hint="Se necesita una receta con versiones y el catálogo de ingredientes para crear órdenes."
+          />
         )}
       </div>
     </div>

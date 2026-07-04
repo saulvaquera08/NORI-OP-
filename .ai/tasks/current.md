@@ -1,14 +1,6 @@
-# Tarea activa: T-001 — Pantallas resilientes a base vacía + receta no hardcodeada
+# Tarea activa: (ninguna)
 
-**Prioridad:** P0 · **Sprint:** 1 · **Inicio:** 2026-07-04
+La última tarea cerrada fue **T-001** (2026-07-04) — ver `completed.md`.
 
-## Pipeline
-| Etapa | Veredicto | Notas |
-|---|---|---|
-| Orchestrator | ✅ asignada | Primera tarea del sprint 1: es el único P0 y bloquea cualquier uso real. |
-| Planner | ⏳ | |
-| Developer | ⏳ | |
-| Reviewer | ⏳ | |
-| QA | ⏳ | |
-| Nutrition | ⏳ | |
-| Deployment | ⏳ | |
+**Siguiente en cola según sprint 1:** T-002 · Pantalla "Recetario" (recetas de marca NORI).
+El Orchestrator la activará al iniciar el próximo ciclo de trabajo.

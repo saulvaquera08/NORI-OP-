@@ -1,17 +1,15 @@
 import { createClient } from "@/lib/supabase/server";
 import {
   getIngredientCatalog,
-  getRecipeByName,
+  getPrimaryFormuladorRecipe,
   getRecipeVersionRows,
-  getRecipeVersions,
 } from "@/lib/nori/data";
 import { FormuladorScreen } from "@/app/(app)/formulador/formulador-screen";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { SetupRequired } from "@/components/nori/setup-required";
+import { EmptyState } from "@/components/nori/empty-state";
 
 export const dynamic = "force-dynamic";
-
-const RECIPE_NAME = "Chocolate Proteico";
 
 export default async function FormuladorPage({
   searchParams,
@@ -22,8 +20,17 @@ export default async function FormuladorPage({
   const { v } = await searchParams;
   const supabase = await createClient();
 
-  const recipe = await getRecipeByName(supabase, RECIPE_NAME);
-  const versions = await getRecipeVersions(supabase, recipe.id);
+  const primary = await getPrimaryFormuladorRecipe(supabase);
+  if (!primary) {
+    return (
+      <EmptyState
+        title="Aún no hay recetas en el formulador"
+        description="El formulador trabaja con recetas versionadas y el catálogo de ingredientes (precios y macros por 100 g). Cuando exista al menos una receta con versiones, aparecerá aquí para editarla gramo a gramo."
+        hint="Siguiente paso: capturar el catálogo real de ingredientes (T-004 del backlog)."
+      />
+    );
+  }
+  const { recipe, versions } = primary;
 
   const selected =
     (v ? versions.find((ver) => String(ver.version_number) === v) : null) ??

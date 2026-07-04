@@ -9,3 +9,6 @@
 - App NORI OS implementada desde el handoff de Claude Design (7 pantallas). Commit `0428601`.
 - Schema inicial aplicado al proyecto Supabase "Nori" (11 tablas, RPC, RLS permisivo).
 - Repo publicado en GitHub `saulvaquera08/NORI-OP-`.
+
+## 2026-07-04 (pipeline de agentes)
+- T-001 cerrada: pantallas resilientes a base vacía, receta hardcodeada eliminada, EmptyState reutilizable. Las 7 rutas responden 200 contra DB sin datos operativos.

@@ -1,14 +1,13 @@
 import { createClient } from "@/lib/supabase/server";
-import { getRecipeByName, getRecipeVersions, toIngredientNutrition } from "@/lib/nori/data";
+import { getPrimaryFormuladorRecipe, toIngredientNutrition } from "@/lib/nori/data";
 import { computeNomSeals, computeRecipeCalc } from "@/lib/nori/recipe-calc";
 import { PrintButton } from "@/app/(app)/nutrimental/print-button";
 import type { IngredientRow } from "@/lib/supabase/types";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { SetupRequired } from "@/components/nori/setup-required";
+import { EmptyState } from "@/components/nori/empty-state";
 
 export const dynamic = "force-dynamic";
-
-const RECIPE_NAME = "Chocolate Proteico";
 const SEAL_STYLES: Record<string, string> = {
   ok: "bg-nori-terracota/10 text-nori-terracota border-nori-terracota/25",
   warning: "bg-nori-amber/10 text-nori-amber border-nori-amber/25",
@@ -20,8 +19,17 @@ export default async function NutrimentalPage() {
   if (!isSupabaseConfigured()) return <SetupRequired />;
   const supabase = await createClient();
 
-  const recipe = await getRecipeByName(supabase, RECIPE_NAME);
-  const versions = await getRecipeVersions(supabase, recipe.id);
+  const primary = await getPrimaryFormuladorRecipe(supabase);
+  if (!primary) {
+    return (
+      <EmptyState
+        title="Sin receta para calcular la tabla nutrimental"
+        description="La tabla nutrimental se genera automáticamente desde una receta del formulador. Cuando exista al menos una receta con versiones e ingredientes del catálogo, aquí verás la etiqueta por 100 g y por vaso, con la validación de sellos NOM-051."
+        hint="Siguiente paso: capturar el catálogo real de ingredientes (T-004 del backlog)."
+      />
+    );
+  }
+  const { versions } = primary;
   const vigente = versions.find((v) => v.status === "vigente") ?? versions[0];
 
   const { data: allRows, error } = await supabase

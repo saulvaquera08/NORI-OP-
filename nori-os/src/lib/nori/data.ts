@@ -24,10 +24,22 @@ export async function getIngredientCatalog(supabase: Client) {
   return data;
 }
 
-export async function getRecipeByName(supabase: Client, name: string) {
-  const { data, error } = await supabase.from("recipes").select("*").eq("name", name).single();
-  if (error) throw error;
-  return data;
+// First recipe that actually has formulador versions, or null when the
+// formulador has nothing to work on yet (e.g. fresh database).
+export async function getPrimaryFormuladorRecipe(supabase: Client) {
+  const { data: anyVersion, error: versionError } = await supabase
+    .from("recipe_versions")
+    .select("recipe_id, recipe:recipes(*)")
+    .order("created_at", { ascending: true })
+    .limit(1)
+    .maybeSingle();
+  if (versionError) throw versionError;
+  if (!anyVersion?.recipe) return null;
+
+  const recipe = anyVersion.recipe as unknown as { id: string; name: string };
+  const versions = await getRecipeVersions(supabase, recipe.id);
+  if (versions.length === 0) return null;
+  return { recipe, versions };
 }
 
 export async function getRecipeVersions(supabase: Client, recipeId: string) {
@@ -54,14 +66,3 @@ export async function getRecipeVersionRows(supabase: Client, recipeVersionId: st
     }));
 }
 
-export async function getVigenteVersion(supabase: Client, recipeName: string) {
-  const recipe = await getRecipeByName(supabase, recipeName);
-  const { data: version, error } = await supabase
-    .from("recipe_versions")
-    .select("*")
-    .eq("recipe_id", recipe.id)
-    .eq("status", "vigente")
-    .single();
-  if (error) throw error;
-  return { recipe, version };
-}
