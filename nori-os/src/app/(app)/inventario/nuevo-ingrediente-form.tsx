@@ -155,7 +155,7 @@ export function NuevoIngredienteForm() {
       </div>
       <div className="mb-3 text-[10.5px] leading-relaxed text-nori-text-dim">
         Si dejas la nutrición en 0, el costo funcionará pero la tabla nutrimental de las recetas que lo usen
-        quedará incompleta. "No metabolizables" = carbohidratos que no aportan calorías (ej. alulosa).
+        quedará incompleta. &ldquo;No metabolizables&rdquo; = carbohidratos que no aportan calorías (ej. alulosa).
       </div>
 
       <div className="mb-3 flex flex-wrap items-end gap-2">
