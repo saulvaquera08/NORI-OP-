@@ -13,3 +13,4 @@
 - **Las env vars de Vercel solo aplican en builds nuevos** — redeploy obligatorio tras agregarlas.
 - **No encadenar `pkill` al inicio de comandos compuestos** — el señal-144 aborta todo lo que sigue.
 - **Leer la SALIDA del lint, no solo el conteo**: un push se fue con 2 errores de `react/no-unescaped-entities` porque el gate solo imprimió el número. El gate de Deployment debe fallar en conteo > 0.
+- **`backdrop-filter` crea containing block para descendientes `fixed`** (igual que transform): un drawer fixed dentro de un topbar con blur queda atrapado y recortado. Solución: `createPortal(…, document.body)`.

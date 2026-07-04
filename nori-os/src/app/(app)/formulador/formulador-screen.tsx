@@ -57,7 +57,9 @@ export function FormuladorScreen({
     if (debounceRefs.current[ingredientId]) clearTimeout(debounceRefs.current[ingredientId]);
     debounceRefs.current[ingredientId] = setTimeout(() => {
       startTransition(() => {
-        updateRecipeIngredientGrams(selectedVersionId, ingredientId, grams).catch(() => {});
+        updateRecipeIngredientGrams(selectedVersionId, ingredientId, grams).catch(() =>
+          setSaveError("⚠ El último cambio no se guardó — revisa tu conexión.")
+        );
       });
     }, 400);
   }
@@ -72,14 +74,18 @@ export function FormuladorScreen({
     if (rows.some((r) => r.ingredient.id === ing.id)) return;
     setRows((rs) => [...rs, { ingredient: ing, grams: 50 }]);
     startTransition(() => {
-      addRecipeIngredient(selectedVersionId, ing.id).catch(() => {});
+      addRecipeIngredient(selectedVersionId, ing.id).catch(() =>
+        setSaveError("⚠ No se pudo agregar el ingrediente — revisa tu conexión.")
+      );
     });
   }
 
   function onRemoveIngredient(ingredientId: string) {
     setRows((rs) => rs.filter((r) => r.ingredient.id !== ingredientId));
     startTransition(() => {
-      removeRecipeIngredient(selectedVersionId, ingredientId).catch(() => {});
+      removeRecipeIngredient(selectedVersionId, ingredientId).catch(() =>
+        setSaveError("⚠ No se pudo quitar el ingrediente — revisa tu conexión.")
+      );
     });
   }
 

@@ -31,8 +31,9 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen w-full items-center justify-center bg-nori-bg p-6 text-nori-text">
-      <div className="w-full max-w-sm">
+    <div className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-nori-bg p-6 text-nori-text">
+      <div className="nori-login-glow pointer-events-none absolute inset-0" />
+      <div className="nori-fade-up relative w-full max-w-sm">
         <div className="mb-8 flex items-center justify-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-[10px] border border-white/[0.12] bg-[#0E1116]">
             <div

@@ -56,12 +56,15 @@ export function Sidebar({ userEmail }: { userEmail?: string | null }) {
               href={item.href}
               data-nav={item.href}
               className={cn(
-                "mb-[1px] flex items-center gap-[11px] rounded-lg px-[10px] py-[9px] text-[13px] transition-colors",
+                "relative mb-[1px] flex items-center gap-[11px] rounded-lg px-[10px] py-[9px] text-[13px] transition-all duration-200",
                 active
                   ? "bg-white/[0.06] text-nori-text"
-                  : "text-nori-text-muted hover:bg-white/[0.04] hover:text-nori-text"
+                  : "text-nori-text-muted hover:translate-x-[2px] hover:bg-white/[0.04] hover:text-nori-text"
               )}
             >
+              {active && (
+                <span className="absolute -left-3 top-1/2 h-[18px] w-[3px] -translate-y-1/2 rounded-r-full bg-nori-terracota" />
+              )}
               <NavIcon name={item.icon} />
               <span>{item.label}</span>
             </Link>
