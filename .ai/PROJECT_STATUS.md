@@ -1,0 +1,42 @@
+# PROJECT STATUS — NORI OS
+
+_Actualizado: 2026-07-04 · por: Orchestrator_
+
+## Estado general
+🟡 **Funcional en desarrollo, no desplegado.** Build, lint y TypeScript pasan. Las 7 pantallas del prototipo están implementadas y el recetario de marca NORI vive en Supabase. **3 pantallas truenan contra la base real (vacía de datos operativos)** — es la tarea activa (T-001). Sin deploy en Vercel todavía.
+
+## Infraestructura
+| Pieza | Estado |
+|---|---|
+| Repo GitHub `saulvaquera08/NORI-OP-` | ✅ sincronizado (`main`) |
+| Supabase "Nori" `ncekuagdxcngefoafzro` | ✅ schema completo (16 tablas + RPC), migraciones versionadas |
+| Datos reales en Supabase | 🟡 solo recetario de marca (5 recetas); catálogo/ventas/producción vacíos |
+| Vercel | ❌ pendiente (T-003) |
+| Auth / roles | ❌ no existe; RLS permisivo deliberado (T-008) |
+
+## Módulos
+| Módulo | Implementado | Funciona con DB real |
+|---|---|---|
+| Dashboard | ✅ | ✅ (agregados en cero) |
+| Formulador | ✅ | ❌ crash — receta hardcodeada inexistente (T-001) |
+| Nutrimental | ✅ | ❌ crash — mismo motivo (T-001) |
+| Inventario | ✅ | ✅ (vacío) |
+| Producción | ✅ | ❌ crash con 0 órdenes (T-001) |
+| Ventas | ✅ | ✅ (vacío) |
+| NORI AI | ✅ UI/persistencia | 🟡 respuestas placeholder, sin LLM (T-006) |
+| Recetario de marca | ❌ sin UI (T-002) | datos ✅ en DB |
+| Compras / Finanzas / CRM / Documentos / Configuración | ❌ no iniciados (T-011) | — |
+
+## Pendientes inmediatos
+1. **T-001** (activa) — pantallas resilientes a base vacía.
+2. **T-002** — pantalla Recetario de marca.
+3. **T-003** — deploy a Vercel.
+
+## Bloqueadores
+- **T-004** catálogo de ingredientes: esperando precios/stocks/macros reales del usuario.
+- **T-005** meta mensual de ventas: esperando cifra del usuario.
+- **T-003** Vercel: esperando confirmación de cuenta del usuario.
+- **T-006** NORI AI real: esperando decisión de proveedor LLM y API key.
+
+## Próximo sprint (propuesta)
+Sprint 2 — "Datos reales y primer deploy": T-004 + T-005 (al llegar los datos), T-007 export PNG/PDF, auditoría responsive (T-010). Al final: primera versión productiva para uso interno en NORI.
