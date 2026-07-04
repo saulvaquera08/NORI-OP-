@@ -22,7 +22,7 @@ In the Supabase dashboard, open **SQL Editor** and run, in order:
 1. `supabase/migrations/0001_init.sql` — schema, RLS policies, and the
    `create_production_order` RPC (auto-decrements inventory when a batch is
    logged).
-2. `supabase/migrations/0002_seed.sql` — seed data matching the prototype
+2. `supabase/demo-seed.sql` — optional demo data matching the prototype (do NOT run in production; real brand data lives in the migrations)
    (ingredients, the Chocolate Proteico V1–V5 recipe history, inventory,
    production orders, ~30 days of sales history for the dashboard charts,
    and NORI AI chat history).
