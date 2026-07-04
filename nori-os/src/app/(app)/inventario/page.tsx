@@ -5,6 +5,7 @@ import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { SetupRequired } from "@/components/nori/setup-required";
 import { InventarioForms } from "@/app/(app)/inventario/inventario-forms";
 import { NuevoIngredienteForm } from "@/app/(app)/inventario/nuevo-ingrediente-form";
+import { PrecioEditable } from "@/app/(app)/inventario/precio-editable";
 
 export const dynamic = "force-dynamic";
 
@@ -49,7 +50,7 @@ export default async function InventarioPage({
   });
 
   return (
-    <div className="p-7">
+    <div className="p-4 md:p-7">
       <NuevoIngredienteForm />
       <InventarioForms
         ingredients={ingredients.map((i) => ({
@@ -77,16 +78,16 @@ export default async function InventarioPage({
         ))}
       </div>
 
-      <div className="mb-[22px] grid grid-cols-4 gap-[14px]">
+      <div className="mb-[22px] grid grid-cols-1 gap-3 sm:grid-cols-2 md:gap-[14px] lg:grid-cols-4">
         {filtered.map((it) => {
           const crit = Number(it.stock) < Number(it.stock_min);
           const pct = Math.min(100, (Number(it.stock) / (Number(it.stock_min) * 2 || 1)) * 100);
           return (
             <div key={it.id} className="rounded-[13px] border border-nori-border bg-nori-card p-4">
-              <div className="mb-[10px] flex items-start justify-between">
+              <div className="mb-[10px] flex items-start justify-between gap-2">
                 <span className="text-[13.5px] font-semibold">{it.name}</span>
                 <span
-                  className="rounded-full px-[9px] py-[3px] text-[10.5px]"
+                  className="flex-none rounded-full px-[9px] py-[3px] text-[10.5px]"
                   style={{
                     background: crit ? "rgba(193,88,74,0.12)" : "rgba(201,131,79,0.1)",
                     color: crit ? "#C1584A" : "#C9834F",
@@ -105,8 +106,12 @@ export default async function InventarioPage({
                   style={{ background: crit ? "#C1584A" : "#C9834F", width: `${pct.toFixed(0)}%` }}
                 />
               </div>
-              <div className="text-[11px] text-nori-text-dim">
-                mín. {Number(it.stock_min)} {it.unit} · lote {it.lot_code}
+              <div className="flex items-center justify-between gap-2 text-[11px] text-nori-text-dim">
+                <span>
+                  mín. {Number(it.stock_min)} {it.unit}
+                  {it.lot_code ? ` · lote ${it.lot_code}` : ""}
+                </span>
+                <PrecioEditable ingredientId={it.id} price={Number(it.price_per_kg)} unit={it.unit} />
               </div>
             </div>
           );
@@ -118,11 +123,11 @@ export default async function InventarioPage({
 
       <div className="rounded-[14px] border border-nori-border bg-nori-card p-5">
         <div className="mb-[14px] text-[13px] font-semibold">Movimientos recientes</div>
-        <div className="flex flex-col gap-[2px]">
+        <div className="flex flex-col gap-[2px] overflow-x-auto">
           {(movementsRes.data ?? []).map((m) => (
             <div
               key={m.id}
-              className="grid grid-cols-[90px_1.3fr_0.7fr_0.7fr] items-center gap-[10px] border-b border-white/[0.05] px-[6px] py-[10px] text-[12.5px]"
+              className="grid min-w-[420px] grid-cols-[70px_1.3fr_0.6fr_0.7fr] items-center gap-[10px] border-b border-white/[0.05] px-[6px] py-[10px] text-[12.5px]"
             >
               <span className="font-mono text-[11px] text-nori-text-dim">{formatShortDate(m.created_at)}</span>
               <span>{m.description}</span>

@@ -212,13 +212,15 @@ export default async function DashboardPage() {
   const recentActivity = activity.slice(0, 4);
 
   return (
-    <div className="p-7 pb-12">
-      <div className="mb-[14px] grid grid-cols-4 gap-[14px]">
+    <div className="p-4 pb-12 md:p-7">
+      <div className="mb-[14px] grid grid-cols-2 gap-3 md:gap-[14px] lg:grid-cols-4">
         <div className="rounded-[14px] border border-nori-border bg-nori-card p-5">
           <div className="mb-[10px] text-xs text-nori-text-muted">Ventas del mes</div>
           <div className="text-[27px] font-bold tracking-[-0.6px]">${formatMoney(salesThisMonth)}</div>
           <div className={`mt-[6px] text-xs ${salesGrowthPct >= 0 ? "text-nori-terracota" : "text-nori-red"}`}>
-            {salesGrowthPct >= 0 ? "↑" : "↓"} {Math.abs(salesGrowthPct).toFixed(1)}% vs mes anterior
+            {salesPrevMonth > 0
+              ? `${salesGrowthPct >= 0 ? "↑" : "↓"} ${Math.abs(salesGrowthPct).toFixed(1)}% vs mes anterior`
+              : "sin mes anterior para comparar"}
           </div>
         </div>
         <div className="rounded-[14px] border border-nori-border bg-nori-card p-5">
@@ -242,7 +244,7 @@ export default async function DashboardPage() {
         </div>
       </div>
 
-      <div className="mb-[14px] grid grid-cols-[1.7fr_1fr] gap-[14px]">
+      <div className="mb-[14px] grid grid-cols-1 gap-[14px] lg:grid-cols-[1.7fr_1fr]">
         <div className="rounded-[14px] border border-nori-border bg-nori-card p-[22px]">
           <div className="mb-[18px] flex items-baseline justify-between">
             <span className="text-[13px] font-semibold">Ventas vs. Producción · 14 días</span>
@@ -301,7 +303,7 @@ export default async function DashboardPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-[14px]">
+      <div className="grid grid-cols-1 gap-[14px] lg:grid-cols-2">
         <div className="rounded-[14px] border border-nori-border bg-nori-card p-5">
           <div className="mb-[14px] text-[13px] font-semibold">Alertas</div>
           <div className="flex flex-col gap-[10px]">

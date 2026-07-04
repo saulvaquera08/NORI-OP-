@@ -5,6 +5,7 @@ import { NuevaOrdenForm } from "@/app/(app)/produccion/nueva-orden-form";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { SetupRequired } from "@/components/nori/setup-required";
 import { EmptyState } from "@/components/nori/empty-state";
+import { OrdenStatusActions } from "@/app/(app)/produccion/orden-status-actions";
 
 export const dynamic = "force-dynamic";
 
@@ -68,8 +69,8 @@ export default async function ProduccionPage({
     recipe.recipe_version ? `V${recipe.recipe_version.version_number}` : "";
 
   return (
-    <div className="flex h-full">
-      <div className="w-[340px] flex-none overflow-y-auto border-r border-nori-border p-[18px]">
+    <div className="flex h-full flex-col md:flex-row">
+      <div className="max-h-[45vh] w-full flex-none overflow-y-auto border-b border-nori-border p-[18px] md:max-h-none md:w-[340px] md:border-b-0 md:border-r">
         <div className="mb-3 text-[11px] uppercase tracking-[0.5px] text-nori-text-dim">
           Órdenes de producción
         </div>
@@ -109,7 +110,7 @@ export default async function ProduccionPage({
         ))}
       </div>
 
-      <div className="min-w-0 flex-1 overflow-y-auto p-7">
+      <div className="min-w-0 flex-1 overflow-y-auto p-4 md:p-7">
         {selected ? (
           <>
             <div className="mb-[6px] flex items-center gap-[10px]">
@@ -126,11 +127,12 @@ export default async function ProduccionPage({
                 {STATUS_LABEL[selected.status]}
               </span>
             </div>
-            <div className="mb-[22px] text-[12.5px] text-nori-text-muted">
+            <div className="mb-4 text-[12.5px] text-nori-text-muted">
               {selected.code} · lote {selected.lot_code ?? "—"}
             </div>
+            {selected.status === "en_proceso" ? <OrdenStatusActions orderId={selected.id} /> : null}
 
-            <div className="mb-5 grid grid-cols-4 gap-3">
+            <div className="mb-5 grid grid-cols-2 gap-3 lg:grid-cols-4">
               <div className="rounded-[11px] border border-nori-border bg-nori-card p-[14px]">
                 <div className="mb-[6px] text-[11px] text-nori-text-muted">Temperatura</div>
                 <div className="font-mono text-[17px] font-bold">

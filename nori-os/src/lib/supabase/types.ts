@@ -152,6 +152,33 @@ export type CompanySettingsRow = {
   monthly_sales_goal: number;
 };
 
+export type PackagingItemRow = {
+  id: string;
+  name: string;
+  cost_low_volume_min: number | null;
+  cost_low_volume_max: number | null;
+  cost_high_volume_min: number | null;
+  cost_high_volume_max: number | null;
+  high_volume_threshold: string | null;
+  notes: string | null;
+  created_at: string;
+};
+
+export type SalesGoalPhaseRow = {
+  id: string;
+  phase_order: number;
+  months_label: string;
+  pintas_min: number;
+  pintas_max: number;
+  channel: string;
+  revenue_min: number;
+  revenue_max: number;
+  contribution_min: number;
+  contribution_max: number;
+  requires: string | null;
+  created_at: string;
+};
+
 type Relationships = never[];
 
 export type Database = {
@@ -247,6 +274,18 @@ export type Database = {
         Row: CompanySettingsRow;
         Insert: Partial<CompanySettingsRow>;
         Update: Partial<CompanySettingsRow>;
+        Relationships: Relationships;
+      };
+      packaging_items: {
+        Row: PackagingItemRow;
+        Insert: Partial<PackagingItemRow> & { name: string };
+        Update: Partial<PackagingItemRow>;
+        Relationships: Relationships;
+      };
+      sales_goal_phases: {
+        Row: SalesGoalPhaseRow;
+        Insert: Partial<SalesGoalPhaseRow> & { phase_order: number; months_label: string };
+        Update: Partial<SalesGoalPhaseRow>;
         Relationships: Relationships;
       };
     };

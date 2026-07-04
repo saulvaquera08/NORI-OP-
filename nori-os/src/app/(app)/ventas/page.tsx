@@ -3,6 +3,7 @@ import { formatMoney } from "@/lib/nori/format";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { SetupRequired } from "@/components/nori/setup-required";
 import { NuevaVentaForm } from "@/app/(app)/ventas/nueva-venta-form";
+import { VentaRowActions } from "@/app/(app)/ventas/venta-row-actions";
 
 export const dynamic = "force-dynamic";
 
@@ -84,12 +85,12 @@ export default async function VentasPage() {
   const paymentTotal = Math.max(1, paymentBreakdown.reduce((a, p) => a + p.amount, 0));
 
   return (
-    <div className="p-7">
+    <div className="p-4 md:p-7">
       <NuevaVentaForm
         channels={channels.map((c) => ({ id: c.id, name: c.name }))}
         products={["Vainilla", "Chocolate", "Cajeta", "Plátano", "Cookies & Cream"]}
       />
-      <div className="mb-[14px] grid grid-cols-4 gap-[14px]">
+      <div className="mb-[14px] grid grid-cols-2 gap-3 md:gap-[14px] lg:grid-cols-4">
         <div className="rounded-[14px] border border-nori-border bg-nori-card p-[18px]">
           <div className="mb-2 text-xs text-nori-text-muted">Ingresos del mes</div>
           <div className="text-[23px] font-bold">${formatMoney(ingresos)}</div>
@@ -108,7 +109,7 @@ export default async function VentasPage() {
         </div>
       </div>
 
-      <div className="mb-[14px] grid grid-cols-2 gap-[14px]">
+      <div className="mb-[14px] grid grid-cols-1 gap-[14px] lg:grid-cols-2">
         <div className="rounded-[14px] border border-nori-border bg-nori-card p-5">
           <div className="mb-4 text-[13px] font-semibold">Ingresos por canal</div>
           <div className="flex flex-col gap-3">
@@ -151,11 +152,11 @@ export default async function VentasPage() {
 
       <div className="rounded-[14px] border border-nori-border bg-nori-card p-5">
         <div className="mb-[14px] text-[13px] font-semibold">Pedidos recientes</div>
-        <div className="flex flex-col gap-[2px]">
+        <div className="flex flex-col gap-[2px] overflow-x-auto">
           {(recentRes.data ?? []).map((ro, i) => (
             <div
               key={ro.id}
-              className="grid grid-cols-[32px_1.2fr_0.8fr_0.6fr_0.7fr] items-center gap-3 border-b border-white/[0.05] px-[6px] py-[10px] text-[12.5px]"
+              className="grid min-w-[520px] grid-cols-[32px_1.2fr_0.8fr_0.6fr_0.7fr_52px] items-center gap-3 border-b border-white/[0.05] px-[6px] py-[10px] text-[12.5px]"
             >
               <span
                 className="flex h-[26px] w-[26px] items-center justify-center rounded-full text-[10.5px] font-semibold text-[#15181C]"
@@ -172,8 +173,14 @@ export default async function VentasPage() {
               <span className={ro.status === "pagado" ? "text-nori-terracota" : "text-nori-amber"}>
                 {ro.status === "pagado" ? "Pagado" : "Pendiente"}
               </span>
+              <VentaRowActions saleId={ro.id} status={ro.status as "pagado" | "pendiente"} />
             </div>
           ))}
+          {(recentRes.data ?? []).length === 0 && (
+            <div className="py-2 text-[12.5px] text-nori-text-dim">
+              Sin ventas registradas todavía — usa “+ Registrar venta”.
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -1,24 +1,18 @@
-# Tarea activa: Sprint 2 en cierre — T-018 + T-015 + T-016 + T-019 implementadas
+# Sprint 3 — Login + iPhone-first + arreglos de auditoría (T-008, T-020, T-021, T-022 parcial, T-023, T-024, T-025)
 
-**Estado: código completo, verificado y en `main` (auto-deploy Vercel). PENDIENTE: aplicar migraciones 0006-0009 a Supabase producción (conector MCP caído — sin ellas las pantallas nuevas mostrarán estados vacíos/errores de columna).**
+**Estado: código completo y verificado E2E — en `main` (auto-deploy). PENDIENTE: (1) crear los 2 usuarios en Supabase Auth (acción del usuario), (2) aplicar migración 0010 (RLS solo authenticated) a producción.**
 
-## Pipeline conjunto (T-018 variaciones+nutrimental · T-015 inventario · T-016 ventas · T-017 desbloqueada)
+## Pipeline
 | Etapa | Veredicto | Notas |
 |---|---|---|
-| Orchestrator | ✅ | Las 3 tareas de captura se implementaron juntas por el reporte de fallas del fundador (todas eran "falta el formulario"). |
-| Planner | ✅ | Plan T-018 + extensión de captura. |
-| Developer | ✅ | Migraciones 0007 (carbos no metabolizables), 0008 (Base V6 al formulador), 0009 (canales + RPCs inventario); recipe-calc porción parametrizada; guardar-como-nueva-versión; nueva receta; forms inventario (conteo/entrada/salida/mínimo) y ventas. |
-| Reviewer | ✅ | 1 crítica corregida en el camino: conflicto de unique(name) en canales → `on conflict (name)`. saveAsNewVersion sin transacción DB (secuencial con rollback manual del estado vigente) — aceptado para uso interno, anotado. |
-| QA | ✅ | 7 rutas en 200 con fixtures con joins embebidos; formulador muestra Base V6 con botón "Guardar como V7"; forms presentes; producción ya ofrece la receta. Mutaciones de RPC probadas en Postgres local (entrada +3, conteo=40, salida −1 ✅). Límite: guardado de versión/ventas solo verificable en producción (mock read-only) — verificar con el usuario tras el deploy. |
-| Nutrition | ✅ | **kcal 361/pinta y 89 kcal/100 g SIN contar alulosa** (contándola: ~541 — el bug T-012 queda resuelto). Proteína 34.2 g y costo $55.60 vs declarados 35.2 g/$54-58: deltas explicados por la discrepancia leche 300 vs 380 ml YA reportada al fundador. Sello de grasas relabeled "conservador" (el catálogo no distingue saturadas — honesto). |
-| Deployment | 🟡 | Build+lint limpios; push a main hecho. **Falta aplicar 0006/0007/0008/0009 a producción.** |
+| Orchestrator/Planner | ✅ | Paquete autorizado por el fundador: "arregla todo lo necesario + login simple + fácil en iPhone". |
+| Developer | ✅ | proxy.ts (Next 16 renombró middleware→proxy, detectado vía docs del paquete); /login; guard en layout + correo y "Salir" en sidebar; MobileNav inferior estilo iOS con safe-area; grids responsivas en 7 pantallas; paneles del formulador apilados en móvil; migración 0010 RLS authenticated-only + revoke de RPCs a anon; completar/cancelar orden; precio editable de ingrediente; corregir/eliminar venta; costo+empaque y margen real; pulido (growth sin mes previo, lote null, mensajes vacíos, tooltips, fila no-metabolizables). |
+| Reviewer | ✅ | Diff completo revisado durante construcción; mock extendido con GoTrue+CORS solo en scratchpad (no toca el repo). |
+| QA | ✅ E2E | Playwright viewport iPhone (393px): sin sesión → redirige a /login; login → dashboard; 7 pantallas sin overflow horizontal y con bottom nav; /login con sesión → dashboard. Capturas s3_*.png. |
+| Nutrition | ✅ | Costo+empaque $70.60–77.60 y margen real 40.3–45.7% — coinciden con el COGS ($70-78) y margen (~43%) declarados por el fundador. |
+| Deployment | 🟡 | Build+lint limpios (salida completa revisada); push a main. Falta 0010 en producción + alta de usuarios. |
 
-## T-019 · Alta de ingredientes desde la UI (pedido directo del fundador)
-Form "+ Agregar ingrediente" en Inventario: nombre, unidad kg/L, precio, proveedor/marca, macros por 100 g (con campo de carbohidratos no metabolizables y advertencia si quedan en 0), stock inicial y mínimo. Server action `createIngredient` con validaciones. Sin migración (tabla existente). Pipeline: Dev/Reviewer/QA ✅ (200, form presente, build+lint limpios) · Nutrition ✅ (valida no-metab ≤ carbos totales) · Deployment ✅ push.
-
-## Al aplicar las migraciones, verificar en producción con el usuario:
-1. Formulador: Base V6 visible, editar gramos, "Guardar como V7".
-2. Nutrimental: etiqueta por pinta 475 ml.
-3. Inventario: conteo físico de un ingrediente real.
-4. Ventas: registrar una venta de prueba.
-5. Producción: crear una orden (descuenta inventario).
+## Para activar el login (acción del usuario, 2 min)
+1. Supabase → Authentication → Users → **Add user** → correo y contraseña tuyos y de tu socio (marca "Auto Confirm").
+2. Aplicar `0010_auth_rls.sql` (yo vía MCP cuando regrese, o pegar en SQL Editor).
+3. La app pedirá login; sin sesión nadie puede leer/escribir nada (ni por API).

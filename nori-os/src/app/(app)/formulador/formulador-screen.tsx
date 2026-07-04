@@ -26,6 +26,7 @@ export function FormuladorScreen({
   servingMl,
   initialRows,
   catalog,
+  packagingLow,
 }: {
   recipes: { id: string; name: string }[];
   recipeId: string;
@@ -38,6 +39,7 @@ export function FormuladorScreen({
   servingMl: number;
   initialRows: RecipeRowInput[];
   catalog: IngredientNutrition[];
+  packagingLow: { min: number; max: number } | null;
 }) {
   const editable = selectedStatus === "vigente";
   const [rows, setRows] = useState<RecipeRowInput[]>(initialRows);
@@ -116,9 +118,9 @@ export function FormuladorScreen({
         </div>
       </div>
 
-      <div className="flex min-h-0 flex-1">
+      <div className="flex min-h-0 flex-1 flex-col md:flex-row">
         {/* ---- catálogo ---- */}
-        <div className="w-[200px] flex-none overflow-y-auto border-r border-nori-border p-3 pt-[18px]">
+        <div className="max-h-44 w-full flex-none overflow-y-auto border-b border-nori-border p-3 pt-[14px] md:max-h-none md:w-[200px] md:border-b-0 md:border-r md:pt-[18px]">
           <div className="mb-3 text-[11px] uppercase tracking-[0.5px] text-nori-text-dim">Ingredientes</div>
           {catalog.map((ing) => {
             const already = rows.some((r) => r.ingredient.id === ing.id);
@@ -127,7 +129,7 @@ export function FormuladorScreen({
                 key={ing.id}
                 className="mb-[2px] flex items-center justify-between rounded-lg px-2 py-[9px] hover:bg-white/[0.04]"
               >
-                <div className="min-w-0">
+                <div className="min-w-0" title={ing.name}>
                   <div className="overflow-hidden text-ellipsis whitespace-nowrap text-[12.5px] text-[#E5E1D9]">
                     {ing.name}
                   </div>
@@ -233,7 +235,7 @@ export function FormuladorScreen({
         </div>
 
         {/* ---- panel en vivo ---- */}
-        <div className="w-[228px] flex-none overflow-y-auto border-l border-nori-border p-[14px] pt-5">
+        <div className="w-full flex-none border-t border-nori-border p-[14px] pt-5 md:w-[228px] md:overflow-y-auto md:border-l md:border-t-0">
           <div className="mb-[14px] text-[11px] uppercase tracking-[0.5px] text-nori-text-dim">En vivo</div>
           <div className="mb-4 grid grid-cols-2 gap-2">
             <div className="min-w-0 rounded-[10px] border border-nori-border bg-nori-card p-[10px]">
@@ -280,9 +282,25 @@ export function FormuladorScreen({
             no metabolizables (alulosa).
           </div>
 
-          <div className="mt-[18px] rounded-[10px] border border-nori-glaciar/[0.22] bg-nori-glaciar/[0.06] p-3">
-            <div className="mb-1 text-[10.5px] text-nori-text-muted">Margen estimado (venta ${sellPrice})</div>
-            <div className="font-mono text-[19px] font-bold text-nori-glaciar">{calc.margin.toFixed(1)}%</div>
+          {packagingLow ? (
+            <div className="mt-[18px] rounded-[10px] border border-nori-border bg-nori-card p-3">
+              <div className="mb-1 text-[10.5px] text-nori-text-muted">
+                Costo + empaque (bajo volumen ${packagingLow.min}-{packagingLow.max})
+              </div>
+              <div className="font-mono text-[15px] font-bold">
+                ${(calc.costPerVaso + packagingLow.min).toFixed(2)} – ${(calc.costPerVaso + packagingLow.max).toFixed(2)}
+              </div>
+            </div>
+          ) : null}
+          <div className="mt-3 rounded-[10px] border border-nori-glaciar/[0.22] bg-nori-glaciar/[0.06] p-3">
+            <div className="mb-1 text-[10.5px] text-nori-text-muted">
+              Margen {packagingLow ? "real (con empaque, " : "(solo ingredientes, "}venta ${sellPrice})
+            </div>
+            <div className="font-mono text-[19px] font-bold text-nori-glaciar">
+              {packagingLow && sellPrice > 0
+                ? `${(((sellPrice - calc.costPerVaso - packagingLow.max) / sellPrice) * 100).toFixed(1)}% – ${(((sellPrice - calc.costPerVaso - packagingLow.min) / sellPrice) * 100).toFixed(1)}%`
+                : `${calc.margin.toFixed(1)}%`}
+            </div>
           </div>
         </div>
       </div>

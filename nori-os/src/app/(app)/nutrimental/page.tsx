@@ -57,6 +57,14 @@ export default async function NutrimentalPage() {
   const nutriRows = [
     { label: "Grasas", per100: calc.per100g(calc.totals.fat), perVaso: calc.fatVaso, unit: "g" },
     { label: "Carbohidratos", per100: calc.per100g(calc.totals.carbs), perVaso: calc.carbsVaso, unit: "g" },
+    ...(calc.totals.carbs - calc.totals.metabCarbs > 0.05
+      ? [{
+          label: "  de los cuales no metabolizables",
+          per100: calc.per100g(calc.totals.carbs - calc.totals.metabCarbs),
+          perVaso: (calc.totals.carbs - calc.totals.metabCarbs) / calc.vasos,
+          unit: "g",
+        }]
+      : []),
     { label: "Azúcares", per100: calc.per100g(calc.totals.sugar), perVaso: calc.sugarVaso, unit: "g" },
     { label: "Fibra dietética", per100: calc.per100g(calc.totals.fiber), perVaso: calc.fiberVaso, unit: "g" },
     { label: "Proteína", per100: calc.per100g(calc.totals.protein), perVaso: calc.proteinVaso, unit: "g" },
@@ -73,8 +81,8 @@ export default async function NutrimentalPage() {
     });
 
   return (
-    <div className="flex gap-6 p-7">
-      <div className="w-[380px] flex-none rounded-[14px] bg-white px-[26px] py-[22px] font-sans text-[#15181C]">
+    <div className="flex flex-col gap-6 p-4 md:p-7 lg:flex-row">
+      <div className="w-full max-w-[380px] flex-none rounded-[14px] bg-white px-[26px] py-[22px] font-sans text-[#15181C]">
         <div className="mb-[6px] border-b-[8px] border-[#15181C] pb-[6px] text-base font-extrabold">
           Información Nutrimental
         </div>
@@ -151,7 +159,7 @@ export default async function NutrimentalPage() {
 
         <div className="rounded-[14px] border border-nori-border bg-nori-card p-5">
           <div className="mb-[14px] text-[13px] font-semibold">Comparar versiones</div>
-          <div className="grid grid-cols-4 gap-[10px]">
+          <div className="grid grid-cols-2 gap-[10px] sm:grid-cols-4">
             {versionCompare.map((vc) => (
               <div key={vc.label} className="rounded-[9px] bg-nori-input p-3 text-center">
                 <div className="mb-[6px] font-mono text-[11px] text-nori-text-dim">{vc.label}</div>

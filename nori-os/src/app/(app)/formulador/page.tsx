@@ -22,10 +22,19 @@ export default async function FormuladorPage({
   const { rec, v } = await searchParams;
   const supabase = await createClient();
 
-  const [recipeGroups, catalogRows] = await Promise.all([
+  const [recipeGroups, catalogRows, packagingRes] = await Promise.all([
     getFormuladorRecipes(supabase),
     getIngredientCatalog(supabase),
+    supabase.from("packaging_items").select("*"),
   ]);
+  const packagingRows = packagingRes.data ?? [];
+  const packagingLow =
+    packagingRows.length > 0
+      ? {
+          min: packagingRows.reduce((a, p) => a + Number(p.cost_low_volume_min ?? 0), 0),
+          max: packagingRows.reduce((a, p) => a + Number(p.cost_low_volume_max ?? 0), 0),
+        }
+      : null;
   const catalog = catalogRows.map(toIngredientNutrition);
 
   if (recipeGroups.length === 0) {
@@ -64,6 +73,7 @@ export default async function FormuladorPage({
       servingMl={Number(selected.serving_size_ml)}
       initialRows={rows.map((r) => ({ ingredient: r.ingredient, grams: r.grams }))}
       catalog={catalog}
+      packagingLow={packagingLow}
     />
   );
 }

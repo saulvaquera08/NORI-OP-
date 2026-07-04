@@ -55,9 +55,9 @@ export default async function RecetarioPage({
   const processSteps = Array.isArray(selected.process_steps) ? selected.process_steps : [];
 
   return (
-    <div className="flex h-full">
+    <div className="flex h-full flex-col md:flex-row">
       {/* Lista de recetas */}
-      <div className="w-[300px] flex-none overflow-y-auto border-r border-nori-border p-[18px]">
+      <div className="max-h-[45vh] w-full flex-none overflow-y-auto border-b border-nori-border p-[18px] md:max-h-none md:w-[300px] md:border-b-0 md:border-r">
         <div className="mb-3 text-[11px] uppercase tracking-[0.5px] text-nori-text-dim">
           Recetas de marca
         </div>
@@ -117,7 +117,7 @@ export default async function RecetarioPage({
       </div>
 
       {/* Detalle */}
-      <div className="min-w-0 flex-1 overflow-y-auto p-7">
+      <div className="min-w-0 flex-1 overflow-y-auto p-4 md:p-7">
         <div className="mb-1 flex flex-wrap items-center gap-[10px]">
           <span className="text-xl font-bold">{selected.name}</span>
           {selected.machine ? (

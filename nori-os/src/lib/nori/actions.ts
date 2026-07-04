@@ -141,6 +141,52 @@ export async function createRecipeWithVersion(name: string) {
   return { recipeId: recipe.id };
 }
 
+export async function updateProductionOrderStatus(
+  orderId: string,
+  status: "completada" | "cancelada"
+) {
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("production_orders")
+    .update({ status })
+    .eq("id", orderId)
+    .eq("status", "en_proceso");
+  if (error) throw error;
+  revalidatePath("/produccion");
+  revalidatePath("/dashboard");
+}
+
+export async function updateIngredientPrice(ingredientId: string, pricePerKg: number) {
+  const supabase = await createClient();
+  if (!(pricePerKg >= 0)) throw new Error("Precio inválido.");
+  const { error } = await supabase
+    .from("ingredients")
+    .update({ price_per_kg: pricePerKg })
+    .eq("id", ingredientId);
+  if (error) throw error;
+  revalidatePath("/inventario");
+  revalidatePath("/formulador");
+  revalidatePath("/nutrimental");
+  revalidatePath("/dashboard");
+}
+
+export async function setSaleStatus(saleId: string, status: "pagado" | "pendiente") {
+  const supabase = await createClient();
+  const { error } = await supabase.from("sales_orders").update({ status }).eq("id", saleId);
+  if (error) throw error;
+  revalidatePath("/ventas");
+  revalidatePath("/dashboard");
+}
+
+// Solo para corregir errores de captura recientes.
+export async function deleteSale(saleId: string) {
+  const supabase = await createClient();
+  const { error } = await supabase.from("sales_orders").delete().eq("id", saleId);
+  if (error) throw error;
+  revalidatePath("/ventas");
+  revalidatePath("/dashboard");
+}
+
 export async function createIngredient(input: {
   name: string;
   unit: "kg" | "L";

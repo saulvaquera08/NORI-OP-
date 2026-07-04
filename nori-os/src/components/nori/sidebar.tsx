@@ -1,27 +1,30 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useTransition } from "react";
 import { cn } from "@/lib/utils";
-import { NavIcon, type NavIconName } from "@/components/nori/nav-icon";
+import { NavIcon } from "@/components/nori/nav-icon";
+import { NAV_ITEMS } from "@/components/nori/nav-items";
+import { createClient } from "@/lib/supabase/client";
 
-const NAV_ITEMS: { href: string; label: string; icon: NavIconName }[] = [
-  { href: "/dashboard", label: "Dashboard", icon: "dashboard" },
-  { href: "/formulador", label: "Formulador", icon: "formulador" },
-  { href: "/nutrimental", label: "Nutrimental", icon: "nutrimental" },
-  { href: "/recetario", label: "Recetario", icon: "recetario" },
-  { href: "/inventario", label: "Inventario", icon: "inventario" },
-  { href: "/produccion", label: "Producción", icon: "produccion" },
-  { href: "/ventas", label: "Ventas", icon: "ventas" },
-];
-
-export function Sidebar() {
+export function Sidebar({ userEmail }: { userEmail?: string | null }) {
   const pathname = usePathname();
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+
+  function signOut() {
+    startTransition(async () => {
+      await createClient().auth.signOut();
+      router.push("/login");
+      router.refresh();
+    });
+  }
 
   return (
     <div
       id="nori-sidebar"
-      className="flex w-[236px] flex-none flex-col border-r border-nori-border bg-nori-sidebar p-3"
+      className="hidden w-[236px] flex-none flex-col border-r border-nori-border bg-nori-sidebar p-3 md:flex"
     >
       <div className="flex items-center gap-[10px] px-2 pb-[22px] pt-[6px]">
         <div className="flex h-7 w-7 flex-none items-center justify-center rounded-[7px] border border-white/[0.12] bg-[#0E1116]">
@@ -66,8 +69,24 @@ export function Sidebar() {
         })}
       </nav>
 
-      <div className="mt-auto px-2 py-[9px] text-[10.5px] tracking-[0.5px] text-nori-text-dim">
-        Uso interno · NORI
+      <div className="mt-auto flex flex-col gap-1 px-2 py-[9px]">
+        {userEmail ? (
+          <span className="truncate text-[11px] text-nori-text-muted" title={userEmail}>
+            {userEmail}
+          </span>
+        ) : null}
+        <div className="flex items-center justify-between gap-2">
+          <span className="text-[10.5px] tracking-[0.5px] text-nori-text-dim">Uso interno · NORI</span>
+          {userEmail ? (
+            <button
+              onClick={signOut}
+              disabled={isPending}
+              className="text-[11px] text-nori-text-dim underline-offset-2 hover:text-nori-terracota hover:underline disabled:opacity-50"
+            >
+              Salir
+            </button>
+          ) : null}
+        </div>
       </div>
     </div>
   );
