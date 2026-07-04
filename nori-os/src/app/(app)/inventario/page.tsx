@@ -4,6 +4,7 @@ import { formatShortDate } from "@/lib/nori/format";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { SetupRequired } from "@/components/nori/setup-required";
 import { InventarioForms } from "@/app/(app)/inventario/inventario-forms";
+import { NuevoIngredienteForm } from "@/app/(app)/inventario/nuevo-ingrediente-form";
 
 export const dynamic = "force-dynamic";
 
@@ -49,6 +50,7 @@ export default async function InventarioPage({
 
   return (
     <div className="p-7">
+      <NuevoIngredienteForm />
       <InventarioForms
         ingredients={ingredients.map((i) => ({
           id: i.id,

@@ -141,6 +141,53 @@ export async function createRecipeWithVersion(name: string) {
   return { recipeId: recipe.id };
 }
 
+export async function createIngredient(input: {
+  name: string;
+  unit: "kg" | "L";
+  pricePerKg: number;
+  supplier: string;
+  brand: string;
+  proteinG100g: number;
+  carbsG100g: number;
+  nonMetabCarbsG100g: number;
+  fatG100g: number;
+  fiberG100g: number;
+  sodiumMg100g: number;
+  sugarG100g: number;
+  stock: number;
+  stockMin: number;
+}) {
+  const supabase = await createClient();
+  const name = input.name.trim();
+  if (!name) throw new Error("El nombre es obligatorio.");
+  if (!(input.pricePerKg >= 0)) throw new Error("Precio inválido.");
+  if (input.nonMetabCarbsG100g > input.carbsG100g)
+    throw new Error("Los carbohidratos no metabolizables no pueden exceder los carbohidratos totales.");
+
+  const clamp = (n: number) => (Number.isFinite(n) && n >= 0 ? n : 0);
+
+  const { error } = await supabase.from("ingredients").insert({
+    name,
+    unit: input.unit,
+    price_per_kg: clamp(input.pricePerKg),
+    supplier: input.supplier.trim() || null,
+    brand: input.brand.trim() || null,
+    protein_g_100g: clamp(input.proteinG100g),
+    carbs_g_100g: clamp(input.carbsG100g),
+    non_metabolizable_carbs_g_100g: clamp(input.nonMetabCarbsG100g),
+    fat_g_100g: clamp(input.fatG100g),
+    fiber_g_100g: clamp(input.fiberG100g),
+    sodium_mg_100g: clamp(input.sodiumMg100g),
+    sugar_g_100g: clamp(input.sugarG100g),
+    stock: clamp(input.stock),
+    stock_min: clamp(input.stockMin),
+  });
+  if (error) throw error;
+  revalidatePath("/inventario");
+  revalidatePath("/formulador");
+  revalidatePath("/dashboard");
+}
+
 export async function registerInventoryMovement(input: {
   ingredientId: string;
   type: "entrada" | "salida";

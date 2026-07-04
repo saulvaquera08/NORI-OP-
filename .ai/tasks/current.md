@@ -1,4 +1,4 @@
-# Tarea activa: Sprint 2 en cierre — T-018 + T-015 + T-016 implementadas
+# Tarea activa: Sprint 2 en cierre — T-018 + T-015 + T-016 + T-019 implementadas
 
 **Estado: código completo, verificado y en `main` (auto-deploy Vercel). PENDIENTE: aplicar migraciones 0006-0009 a Supabase producción (conector MCP caído — sin ellas las pantallas nuevas mostrarán estados vacíos/errores de columna).**
 
@@ -12,6 +12,9 @@
 | QA | ✅ | 7 rutas en 200 con fixtures con joins embebidos; formulador muestra Base V6 con botón "Guardar como V7"; forms presentes; producción ya ofrece la receta. Mutaciones de RPC probadas en Postgres local (entrada +3, conteo=40, salida −1 ✅). Límite: guardado de versión/ventas solo verificable en producción (mock read-only) — verificar con el usuario tras el deploy. |
 | Nutrition | ✅ | **kcal 361/pinta y 89 kcal/100 g SIN contar alulosa** (contándola: ~541 — el bug T-012 queda resuelto). Proteína 34.2 g y costo $55.60 vs declarados 35.2 g/$54-58: deltas explicados por la discrepancia leche 300 vs 380 ml YA reportada al fundador. Sello de grasas relabeled "conservador" (el catálogo no distingue saturadas — honesto). |
 | Deployment | 🟡 | Build+lint limpios; push a main hecho. **Falta aplicar 0006/0007/0008/0009 a producción.** |
+
+## T-019 · Alta de ingredientes desde la UI (pedido directo del fundador)
+Form "+ Agregar ingrediente" en Inventario: nombre, unidad kg/L, precio, proveedor/marca, macros por 100 g (con campo de carbohidratos no metabolizables y advertencia si quedan en 0), stock inicial y mínimo. Server action `createIngredient` con validaciones. Sin migración (tabla existente). Pipeline: Dev/Reviewer/QA ✅ (200, form presente, build+lint limpios) · Nutrition ✅ (valida no-metab ≤ carbos totales) · Deployment ✅ push.
 
 ## Al aplicar las migraciones, verificar en producción con el usuario:
 1. Formulador: Base V6 visible, editar gramos, "Guardar como V7".

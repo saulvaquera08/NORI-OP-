@@ -20,3 +20,4 @@
 ## Sprint 2 (2026-07-04)
 - Dirección del fundador registrada: control operativo, cero IA. Backlog reordenado.
 - T-014: módulo NORI AI eliminado (ruta, sidebar, topbar ⌘K, caja "sugiere" del formulador, actions, tipos, token CSS, migración 0006 drop de tablas de chat). Bonus: título "Recetario" faltante en topbar corregido.
+- T-019: alta de ingredientes desde la UI (Inventario → "+ Agregar ingrediente": precio, proveedor, macros por 100 g incl. no metabolizables, stock y mínimo). Se refleja automáticamente en Formulador.
