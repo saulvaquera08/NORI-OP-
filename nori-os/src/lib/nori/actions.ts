@@ -141,6 +141,118 @@ export async function createRecipeWithVersion(name: string) {
   return { recipeId: recipe.id };
 }
 
+function slugify(input: string) {
+  return input
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "") // quita acentos
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)+/g, "")
+    .slice(0, 60);
+}
+
+export type NewBrandRecipeInput = {
+  name: string;
+  machine: "ninja_creami" | "whynter_icm200ls" | "";
+  description: string;
+  seasonal: boolean;
+  ingredients: { name: string; quantity: string; function: string }[];
+  nutrition: {
+    kcal: string;
+    protein_g: string;
+    fat_total_g: string;
+    carbs_g: string;
+    sugars_g: string;
+    sodium_mg: string;
+    serving_size_g: string;
+  };
+  notes: string;
+};
+
+// Crea una receta de MARCA (recetario) con sus ingredientes y nutrición
+// declarada. Los valores nutrimentales son estimados del fundador — se marcan
+// is_lab_verified=false hasta el bromatológico.
+export async function createBrandRecipe(input: NewBrandRecipeInput) {
+  const supabase = await createClient();
+  const name = input.name.trim();
+  if (!name) throw new Error("El nombre de la receta es obligatorio.");
+
+  // slug único: base + sufijo numérico si ya existe.
+  const base = slugify(name) || "receta";
+  const { data: existing, error: slugError } = await supabase
+    .from("recipes")
+    .select("slug")
+    .not("slug", "is", null)
+    .like("slug", `${base}%`);
+  if (slugError) throw slugError;
+  const taken = new Set((existing ?? []).map((r) => r.slug));
+  let slug = base;
+  let n = 2;
+  while (taken.has(slug)) slug = `${base}-${n++}`;
+
+  const { data: recipe, error: recipeError } = await supabase
+    .from("recipes")
+    .insert({
+      name,
+      slug,
+      machine: input.machine || null,
+      description: input.description.trim() || null,
+      seasonal: input.seasonal,
+      is_lab_verified: false,
+      notes: input.notes.trim() || null,
+    })
+    .select()
+    .single();
+  if (recipeError) throw recipeError;
+
+  const ingredients = input.ingredients
+    .map((ing, i) => ({ ...ing, sort_order: i }))
+    .filter((ing) => ing.name.trim());
+  if (ingredients.length > 0) {
+    const { error: ingError } = await supabase.from("recipe_ingredients").insert(
+      ingredients.map((ing) => ({
+        recipe_id: recipe.id,
+        ingredient_name: ing.name.trim(),
+        quantity_display: ing.quantity.trim() || null,
+        function: ing.function.trim() || null,
+        sort_order: ing.sort_order,
+      }))
+    );
+    if (ingError) throw ingError;
+  }
+
+  const num = (v: string) => {
+    const parsed = Number(v);
+    return v.trim() !== "" && Number.isFinite(parsed) ? parsed : null;
+  };
+  const nut = input.nutrition;
+  const hasNutrition = [
+    nut.kcal,
+    nut.protein_g,
+    nut.fat_total_g,
+    nut.carbs_g,
+    nut.sugars_g,
+    nut.sodium_mg,
+    nut.serving_size_g,
+  ].some((v) => v.trim() !== "");
+  if (hasNutrition) {
+    const { error: nutError } = await supabase.from("recipe_nutrition").insert({
+      recipe_id: recipe.id,
+      kcal: num(nut.kcal),
+      protein_g: num(nut.protein_g),
+      fat_total_g: num(nut.fat_total_g),
+      carbs_g: num(nut.carbs_g),
+      sugars_g: num(nut.sugars_g),
+      sodium_mg: num(nut.sodium_mg),
+      serving_size_g: num(nut.serving_size_g),
+    });
+    if (nutError) throw nutError;
+  }
+
+  revalidatePath("/recetario");
+  return { slug };
+}
+
 export async function updateProductionOrderStatus(
   orderId: string,
   status: "completada" | "cancelada"

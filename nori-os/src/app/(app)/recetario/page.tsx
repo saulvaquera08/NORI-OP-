@@ -4,7 +4,7 @@ import { getBrandRecipeData } from "@/lib/nori/data";
 import type { RecipeNutritionRow } from "@/lib/supabase/types";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { SetupRequired } from "@/components/nori/setup-required";
-import { EmptyState } from "@/components/nori/empty-state";
+import { NuevaBrandRecetaForm } from "@/app/(app)/recetario/nueva-brand-receta-form";
 
 export const dynamic = "force-dynamic";
 
@@ -41,151 +41,138 @@ export default async function RecetarioPage({
 
   const { recipes, rules } = await getBrandRecipeData(supabase);
 
-  if (recipes.length === 0) {
+  // Barra de recetas (chips) — consistente con el formulador. Siempre visible
+  // para poder crear la primera receta aunque el recetario esté vacío.
+  const selected = recipes.length > 0 ? (r ? recipes.find((rec) => rec.slug === r) : null) ?? recipes[0] : null;
+
+  const chipBar = (
+    <div className="flex items-center gap-2 overflow-x-auto border-b border-nori-border px-4 py-3 md:px-6">
+      {recipes.map((rec) => (
+        <Link
+          key={rec.id}
+          href={`/recetario?r=${rec.slug}`}
+          className="flex-none rounded-full px-3 py-[6px] text-[12px] transition-colors"
+          style={{
+            background: rec.id === selected?.id ? "rgba(201,131,79,0.15)" : "rgba(255,255,255,0.04)",
+            color: rec.id === selected?.id ? "#C9834F" : "#9C978F",
+          }}
+        >
+          {rec.name}
+          {rec.seasonal ? " ✦" : ""}
+        </Link>
+      ))}
+      <div className="ml-auto flex-none pl-2">
+        <NuevaBrandRecetaForm />
+      </div>
+    </div>
+  );
+
+  if (!selected) {
     return (
-      <EmptyState
-        title="El recetario está vacío"
-        description="Aquí viven las recetas oficiales de marca NORI: bases por máquina, variantes de sabor, proceso, nutrición estimada y validación de sellos NOM-051."
-      />
+      <div className="flex h-full flex-col">
+        {chipBar}
+        <div className="flex flex-1 flex-col items-center justify-center gap-3 p-8 text-center">
+          <div className="text-[15px] font-semibold">El recetario está vacío</div>
+          <p className="max-w-md text-[13px] leading-relaxed text-nori-text-dim">
+            Aquí viven las recetas oficiales de marca NORI: bases por máquina, variantes de sabor,
+            nutrición estimada y validación de sellos NOM-051. Usa{" "}
+            <span className="text-nori-terracota">+ Nueva receta</span> para crear la primera.
+          </p>
+        </div>
+      </div>
     );
   }
 
-  const selected = (r ? recipes.find((rec) => rec.slug === r) : null) ?? recipes[0];
   const nutrition = selected.nutrition;
   const processSteps = Array.isArray(selected.process_steps) ? selected.process_steps : [];
 
   return (
-    <div className="flex h-full flex-col md:flex-row">
-      {/* Lista de recetas */}
-      <div className="max-h-[45vh] w-full flex-none overflow-y-auto border-b border-nori-border p-[18px] md:max-h-none md:w-[300px] md:border-b-0 md:border-r">
-        <div className="mb-3 text-[11px] uppercase tracking-[0.5px] text-nori-text-dim">
-          Recetas de marca
-        </div>
-        {recipes.map((rec) => {
-          const active = rec.id === selected.id;
-          return (
-            <Link
-              key={rec.id}
-              href={`/recetario?r=${rec.slug}`}
-              className="mb-2 block rounded-[11px] p-[14px]"
-              style={{
-                background: active ? "rgba(201,131,79,0.06)" : "#1B1F25",
-                border: `1px solid ${active ? "rgba(201,131,79,0.28)" : "rgba(255,255,255,0.06)"}`,
-              }}
-            >
-              <div className="mb-[6px] text-[13.5px] font-semibold">{rec.name}</div>
-              <div className="flex flex-wrap gap-[6px]">
-                {rec.machine ? (
-                  <span className="rounded-full bg-white/[0.05] px-2 py-[2px] text-[10px] text-nori-text-muted">
-                    {MACHINE_LABEL[rec.machine]}
-                  </span>
-                ) : null}
-                {rec.version ? (
-                  <span className="rounded-full bg-nori-terracota/10 px-2 py-[2px] font-mono text-[10px] text-nori-terracota">
-                    {rec.version}
-                  </span>
-                ) : null}
-                {rec.seasonal ? (
-                  <span className="rounded-full bg-nori-glaciar/10 px-2 py-[2px] text-[10px] text-nori-glaciar">
-                    estacional
-                  </span>
-                ) : null}
-                {rec.base_recipe_id ? (
-                  <span className="rounded-full bg-white/[0.05] px-2 py-[2px] text-[10px] text-nori-text-dim">
-                    variante
-                  </span>
-                ) : null}
-              </div>
-            </Link>
-          );
-        })}
+    <div className="flex h-full flex-col">
+      {chipBar}
 
-        <div className="mb-[10px] mt-6 text-[11px] uppercase tracking-[0.5px] text-nori-text-dim">
-          Reglas de formulación
-        </div>
-        <ol className="flex flex-col gap-2">
-          {rules.map((rule) => (
-            <li
-              key={rule.id}
-              className="rounded-[9px] border border-nori-border bg-nori-card p-[10px] text-[11.5px] leading-relaxed"
-            >
-              <span className="font-semibold text-nori-text">{rule.rule}.</span>{" "}
-              {rule.rationale ? <span className="text-nori-text-dim">{rule.rationale}</span> : null}
-            </li>
-          ))}
-        </ol>
-      </div>
-
-      {/* Detalle */}
       <div className="min-w-0 flex-1 overflow-y-auto p-4 md:p-7">
-        <div className="mb-1 flex flex-wrap items-center gap-[10px]">
-          <span className="text-xl font-bold">{selected.name}</span>
-          {selected.machine ? (
-            <span className="rounded-full bg-white/[0.05] px-[11px] py-1 text-[11px] text-nori-text-muted">
-              {MACHINE_LABEL[selected.machine]}
-            </span>
+        {/* encabezado */}
+        <div className="nori-fade-up mb-4 rounded-2xl border border-nori-border bg-nori-card p-5">
+          <div className="mb-1 flex flex-wrap items-center gap-[10px]">
+            <span className="text-[20px] font-bold tracking-[-0.3px]">{selected.name}</span>
+            {selected.machine ? (
+              <span className="rounded-full bg-white/[0.05] px-[11px] py-1 text-[11px] text-nori-text-muted">
+                {MACHINE_LABEL[selected.machine]}
+              </span>
+            ) : null}
+            {selected.seasonal ? (
+              <span className="rounded-full bg-nori-glaciar/10 px-[11px] py-1 text-[11px] text-nori-glaciar">
+                Edición especial / estacional
+              </span>
+            ) : null}
+            {selected.base_recipe_id ? (
+              <span className="rounded-full bg-white/[0.05] px-[11px] py-1 text-[11px] text-nori-text-dim">
+                variante
+              </span>
+            ) : null}
+          </div>
+          {selected.description ? (
+            <p className="max-w-2xl text-[13px] leading-relaxed text-nori-text-body">
+              {selected.description}
+            </p>
           ) : null}
-          {selected.seasonal ? (
-            <span className="rounded-full bg-nori-glaciar/10 px-[11px] py-1 text-[11px] text-nori-glaciar">
-              Edición especial / estacional
-            </span>
+          {selected.base ? (
+            <div className="mt-2 text-[12.5px] text-nori-text-muted">
+              Delta sobre{" "}
+              <Link
+                href={`/recetario?r=${selected.base.slug}`}
+                className="text-nori-terracota underline-offset-2 hover:underline"
+              >
+                {selected.base.name}
+              </Link>{" "}
+              — abajo se listan solo los cambios respecto a la base.
+            </div>
+          ) : null}
+          {!selected.is_lab_verified ? (
+            <div className="mt-3 max-w-2xl rounded-[10px] border border-nori-amber/25 bg-nori-amber/[0.06] px-4 py-3 text-[12.5px] leading-relaxed text-nori-amber">
+              Valores estimados con tablas estándar de ingredientes — NO son análisis de laboratorio.
+              El bromatológico es obligatorio antes de empaque comercial.
+            </div>
           ) : null}
         </div>
-        {selected.description ? (
-          <p className="mb-3 max-w-2xl text-[13px] leading-relaxed text-nori-text-body">
-            {selected.description}
-          </p>
-        ) : null}
-        {selected.base ? (
-          <div className="mb-3 text-[12.5px] text-nori-text-muted">
-            Delta sobre{" "}
-            <Link href={`/recetario?r=${selected.base.slug}`} className="text-nori-terracota underline-offset-2 hover:underline">
-              {selected.base.name}
-            </Link>{" "}
-            — abajo se listan solo los cambios respecto a la base.
-          </div>
-        ) : null}
-
-        {!selected.is_lab_verified ? (
-          <div className="mb-5 max-w-2xl rounded-[10px] border border-nori-amber/25 bg-nori-amber/[0.06] px-4 py-3 text-[12.5px] leading-relaxed text-nori-amber">
-            Valores estimados con tablas estándar de ingredientes — NO son análisis de laboratorio. El
-            bromatológico es obligatorio antes de empaque comercial.
-          </div>
-        ) : null}
 
         <div className="grid max-w-4xl grid-cols-1 gap-4 lg:grid-cols-2">
           {/* Ingredientes */}
-          <div className="rounded-[14px] border border-nori-border bg-nori-card p-5">
+          <div className="nori-fade-up rounded-[14px] border border-nori-border bg-nori-card p-5">
             <div className="mb-[14px] text-[13px] font-semibold">
               {selected.base ? "Cambios vs. la base" : "Ingredientes (por pinta ~475 ml)"}
             </div>
-            <div className="flex flex-col">
-              {selected.ingredients.map((ing) => (
-                <div
-                  key={ing.id}
-                  className="flex items-baseline justify-between gap-3 border-b border-white/[0.05] py-[9px] last:border-b-0"
-                >
-                  <div className="min-w-0">
-                    <div className="text-[12.5px] text-nori-text-bright">{ing.ingredient_name}</div>
-                    {ing.function ? (
-                      <div className="text-[10.5px] text-nori-text-dim">{ing.function}</div>
-                    ) : null}
+            {selected.ingredients.length > 0 ? (
+              <div className="flex flex-col">
+                {selected.ingredients.map((ing) => (
+                  <div
+                    key={ing.id}
+                    className="flex items-baseline justify-between gap-3 border-b border-white/[0.05] py-[9px] last:border-b-0"
+                  >
+                    <div className="min-w-0">
+                      <div className="text-[12.5px] text-nori-text-bright">{ing.ingredient_name}</div>
+                      {ing.function ? (
+                        <div className="text-[10.5px] text-nori-text-dim">{ing.function}</div>
+                      ) : null}
+                    </div>
+                    <span className="flex-none whitespace-nowrap font-mono text-[11.5px] text-nori-text-body">
+                      {ing.quantity_display ??
+                        (ing.quantity_g !== null
+                          ? `${formatQty(ing.quantity_g)} g`
+                          : ing.quantity_ml !== null
+                            ? `${formatQty(ing.quantity_ml)} ml`
+                            : "al gusto")}
+                    </span>
                   </div>
-                  <span className="flex-none whitespace-nowrap font-mono text-[11.5px] text-nori-text-body">
-                    {ing.quantity_display ??
-                      (ing.quantity_g !== null
-                        ? `${formatQty(ing.quantity_g)} g`
-                        : ing.quantity_ml !== null
-                          ? `${formatQty(ing.quantity_ml)} ml`
-                          : "al gusto")}
-                  </span>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-[12px] text-nori-text-dim">Sin ingredientes registrados.</div>
+            )}
           </div>
 
           {/* Nutrición declarada */}
-          <div className="rounded-[14px] border border-nori-border bg-nori-card p-5">
+          <div className="nori-fade-up rounded-[14px] border border-nori-border bg-nori-card p-5">
             <div className="mb-[14px] flex items-baseline justify-between">
               <span className="text-[13px] font-semibold">Nutrición estimada</span>
               {nutrition?.serving_size_g !== null && nutrition?.serving_size_g !== undefined ? (
@@ -221,7 +208,7 @@ export default async function RecetarioPage({
 
           {/* Proceso */}
           {processSteps.length > 0 ? (
-            <div className="rounded-[14px] border border-nori-border bg-nori-card p-5">
+            <div className="nori-fade-up rounded-[14px] border border-nori-border bg-nori-card p-5">
               <div className="mb-[14px] text-[13px] font-semibold">Proceso</div>
               <ol className="flex flex-col gap-[10px]">
                 {processSteps.map((step, i) => (
@@ -237,7 +224,7 @@ export default async function RecetarioPage({
           ) : null}
 
           {/* Sellos NOM-051 */}
-          <div className="rounded-[14px] border border-nori-border bg-nori-card p-5">
+          <div className="nori-fade-up rounded-[14px] border border-nori-border bg-nori-card p-5">
             <div className="mb-[14px] text-[13px] font-semibold">Sellos NOM-051</div>
             {selected.seals.length > 0 ? (
               <div className="flex flex-col">
@@ -263,11 +250,26 @@ export default async function RecetarioPage({
         </div>
 
         {selected.notes ? (
-          <div className="mt-4 max-w-4xl rounded-[14px] border border-nori-border bg-nori-card p-5">
+          <div className="nori-fade-up mt-4 max-w-4xl rounded-[14px] border border-nori-border bg-nori-card p-5">
             <div className="mb-2 text-[13px] font-semibold">Notas</div>
             <p className="whitespace-pre-line text-[12.5px] leading-relaxed text-nori-text-body">
               {selected.notes}
             </p>
+          </div>
+        ) : null}
+
+        {/* Reglas de formulación */}
+        {rules.length > 0 ? (
+          <div className="nori-fade-up mt-4 max-w-4xl rounded-[14px] border border-nori-border bg-nori-card p-5">
+            <div className="mb-3 text-[13px] font-semibold">Reglas de formulación</div>
+            <ol className="flex flex-col gap-2">
+              {rules.map((rule) => (
+                <li key={rule.id} className="text-[12px] leading-relaxed">
+                  <span className="font-semibold text-nori-text">{rule.rule}.</span>{" "}
+                  {rule.rationale ? <span className="text-nori-text-dim">{rule.rationale}</span> : null}
+                </li>
+              ))}
+            </ol>
           </div>
         ) : null}
       </div>

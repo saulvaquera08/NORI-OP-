@@ -1,5 +1,11 @@
 # Changelog
 
+## Sprint 5 (2026-07-05)
+- Formulador rediseñado (chips de recetas, tarjetas de ingrediente con steppers −/+, panel "en vivo" con costo/nutrición/empaque/margen). Unidades por ingrediente: "ml" para líquidos (unit 'L'), "g" para sólidos (D-013) — resuelve el pedido de capturar leche/aceite en ml.
+- Recetario rediseñado a barra de chips + tarjetas, coherente con el formulador.
+- Alta de recetas de marca desde la UI: acción `createBrandRecipe` (slug único, ingredientes, nutrición declarada estimada) + modal `NuevaBrandRecetaForm`. Los valores nutrimentales son estimados (is_lab_verified=false).
+- Bug de layout móvil corregido: el editor del formulador ya no queda en scroll interno anidado; en móvil la columna scrollea como una sola.
+
 ## 2026-07-04
 - Sistema de agentes `.ai/` creado (7 agentes, contexto, backlog auditado, memoria).
 - Auditoría inicial: build/lint OK; 3 crashes detectados contra DB vacía (formulador, nutrimental, producción); recetario de marca sin UI.

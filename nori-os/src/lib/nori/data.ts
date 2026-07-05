@@ -49,6 +49,7 @@ export function toIngredientNutrition(i: IngredientRow): IngredientNutrition {
   return {
     id: i.id,
     name: i.name,
+    unit: i.unit,
     pricePerKg: Number(i.price_per_kg),
     proteinG100g: Number(i.protein_g_100g),
     carbsG100g: Number(i.carbs_g_100g),

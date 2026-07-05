@@ -1,6 +1,8 @@
 export type IngredientNutrition = {
   id: string;
   name: string;
+  // 'kg' se captura en g; 'L' se captura en ml (1 ml ≈ 1 g, densidad ~1).
+  unit: "kg" | "L";
   pricePerKg: number;
   proteinG100g: number;
   carbsG100g: number;
